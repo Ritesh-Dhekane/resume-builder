@@ -5,55 +5,57 @@
 <title>Ritesh Dhekane Resume</title>
 
 <style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    @page {
+        size: A4;
         margin: 0;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background: #eef2f7;
     }
 
-    .container {
-        width: 900px;
+    .page {
+        width: 210mm;
         margin: 30px auto;
-        background: #ffffff;
+        background: white;
         display: flex;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        border-radius: 10px;
-        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     .left {
         width: 65%;
-        padding: 35px;
+        padding: 28px;
     }
 
     .right {
         width: 35%;
         background: #1e293b;
         color: #fff;
-        padding: 35px;
+        padding: 28px;
     }
 
     h1 {
         margin: 0;
-        font-size: 32px;
+        font-size: 28px;
         color: #1e293b;
-        letter-spacing: 1px;
     }
 
     .role {
         color: #3b82f6;
         font-weight: 600;
-        margin-bottom: 20px;
+        margin-bottom: 12px;
     }
 
     h2 {
-        font-size: 14px;
-        margin-top: 25px;
+        font-size: 13px;
+        margin-top: 16px;
         text-transform: uppercase;
         letter-spacing: 1px;
         color: #3b82f6;
-        border-bottom: 2px solid #e5e7eb;
-        padding-bottom: 6px;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 4px;
     }
 
     .right h2 {
@@ -62,10 +64,10 @@
     }
 
     p {
-        font-size: 13px;
-        line-height: 1.6;
+        font-size: 12px;
+        line-height: 1.5;
         color: #333;
-        margin: 6px 0;
+        margin: 4px 0;
     }
 
     .right p {
@@ -73,51 +75,54 @@
     }
 
     ul {
-        padding-left: 18px;
+        padding-left: 16px;
+        margin: 4px 0;
     }
 
     li {
-        font-size: 13px;
-        margin-bottom: 8px;
+        font-size: 12px;
+        margin-bottom: 4px;
         color: #444;
-    }
-
-    .right li {
-        color: #e2e8f0;
     }
 
     .job-title {
         font-weight: bold;
-        margin-top: 12px;
-        color: #111827;
+        margin-top: 8px;
+        font-size: 13px;
     }
 
     .company {
         font-weight: 600;
         color: #6b7280;
-        margin-bottom: 5px;
-    }
-
-    .right strong {
-        color: #93c5fd;
-    }
-
-    .contact p {
-        margin: 6px 0;
+        font-size: 12px;
+        margin-bottom: 3px;
     }
 
     .tag {
         display: inline-block;
         background: #3b82f6;
         color: white;
-        padding: 4px 8px;
-        margin: 3px 3px 3px 0;
-        border-radius: 4px;
-        font-size: 11px;
+        padding: 3px 6px;
+        margin: 2px;
+        border-radius: 3px;
+        font-size: 10px;
     }
 
     .edu-block {
-        margin-bottom: 10px;
+        margin-bottom: 6px;
+    }
+
+    /* PRINT FIX */
+    @media print {
+        body {
+            background: none;
+        }
+
+        .page {
+            width: 210mm;
+            margin: 0;
+            box-shadow: none;
+        }
     }
 </style>
 
@@ -125,19 +130,23 @@
 
 <body>
 
-<div class="container">
+<div class="page">
 
     <!-- LEFT -->
     <div class="left">
 
         <h1>RITESH DHEKANE</h1>
-        <p class="role">Senior Java Backend Developer / Tech Lead</p>
+        <p class="role">Senior Full Stack Java Developer / Tech Lead</p>
 
         <h2>Professional Summary</h2>
         <p>
-            Results-driven Java Developer with 8+ years of experience designing and implementing scalable microservices 
-            using Spring Boot and REST APIs. Strong expertise in cloud-native architecture using AWS and containerization 
-            with Docker and Kubernetes. Proven ability to build high-performance systems and deliver reliable, production-ready solutions.
+        Results-driven Senior Full Stack Java Developer / Tech Lead with 8+ years of experience building scalable microservices using Spring Boot and REST APIs. Strong expertise in backend architecture with hands-on experience in React.js for end-to-end development.
+        </p>
+        <p>
+        Skilled in AWS cloud-native systems and containerization using Docker and Kubernetes. Proven ability to optimize performance, design distributed systems, and implement event-driven architectures using Kafka.
+        </p>
+        <p>
+        Experienced in leading teams, driving architectural decisions, and delivering high-quality applications in Agile environments.
         </p>
 
         <h2>Work History</h2>
@@ -162,32 +171,21 @@
             <li>Developed backend services using Java and Spring Boot.</li>
             <li>Built scalable REST APIs and microservices.</li>
             <li>Contributed to system design and architecture decisions.</li>
+            <li>Collaborated with frontend teams using React.</li>
+            <li>Optimized database queries and improved performance.</li>
+            <li>Implemented logging and monitoring for observability.</li>
         </ul>
 
         <p class="job-title">Software Developer | Jun 2018 – Sep 2020</p>
         <p class="company">Technopats IT Solutions – Pune</p>
         <ul>
             <li>Developed applications using Spring and Spring Boot.</li>
-            <li>Integrated REST APIs and improved system functionality.</li>
+            <li>Integrated REST APIs and improved functionality.</li>
             <li>Performed debugging, testing, and code reviews.</li>
+            <li>Worked on frontend enhancements using React and JavaScript.</li>
+            <li>Wrote unit tests to ensure reliability.</li>
+            <li>Collaborated with teams to deliver features on time.</li>
         </ul>
-
-        <h2>Education</h2>
-
-        <div class="edu-block">
-            <p><strong>B.Tech – Computer Science</strong></p>
-            <p>College of Engineering Pune | 2018</p>
-        </div>
-
-        <div class="edu-block">
-            <p><strong>HSC (Science)</strong></p>
-            <p>Maharashtra State Board | 2014</p>
-        </div>
-
-        <div class="edu-block">
-            <p><strong>SSC (English)</strong></p>
-            <p>Maharashtra State Board | 2012</p>
-        </div>
 
     </div>
 
@@ -195,11 +193,9 @@
     <div class="right">
 
         <h2>Contact</h2>
-        <div class="contact">
-            <p><strong>Phone:</strong><br>+91 93225 27567</p>
-            <p><strong>Email:</strong><br>ritesh.dhekane@outlook.com</p>
-            <p><strong>Location:</strong><br>Pune, Maharashtra - 411047</p>
-        </div>
+        <p><strong>Phone:</strong><br>+91 93225 27567</p>
+        <p><strong>Email:</strong><br>ritesh.dhekane@outlook.com</p>
+        <p><strong>Location:</strong><br>Pune, Maharashtra - 411047</p>
 
         <h2>Skills</h2>
 
@@ -227,25 +223,21 @@
             <span class="tag">Jenkins</span>
         </div>
 
-        <p><strong>Database & Messaging</strong></p>
-        <div>
-            <span class="tag">MySQL</span>
-            <span class="tag">PostgreSQL</span>
-            <span class="tag">Redis</span>
-            <span class="tag">Kafka</span>
+        <h2>Education</h2>
+
+        <div class="edu-block">
+            <p><strong>B.Tech – Computer Science</strong></p>
+            <p>College of Engineering Pune | 2018</p>
         </div>
 
-        <p><strong>Monitoring</strong></p>
-        <div>
-            <span class="tag">Splunk</span>
-            <span class="tag">New Relic</span>
+        <div class="edu-block">
+            <p><strong>HSC (Science)</strong></p>
+            <p>Maharashtra State Board | 2014</p>
         </div>
 
-        <p><strong>Concepts</strong></p>
-        <div>
-            <span class="tag">System Design</span>
-            <span class="tag">Distributed Systems</span>
-            <span class="tag">Event Driven</span>
+        <div class="edu-block">
+            <p><strong>SSC (English)</strong></p>
+            <p>Maharashtra State Board | 2012</p>
         </div>
 
     </div>
