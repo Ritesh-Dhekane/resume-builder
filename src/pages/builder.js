@@ -8,6 +8,7 @@ import {
 } from '../state/resumeSchema.js';
 import { downloadAsImage } from '../lib/exportImage.js';
 import { downloadAsPdf, isProEnabled } from '../lib/exportPdf.js';
+import { saveDraft, loadDraft } from '../lib/storage.js';
 
 function filenameFor(resume, ext) {
   const base = (resume.personal.name || 'resume').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -146,7 +147,8 @@ export function mount(container, query) {
   const template = getTemplate(query.get('template'));
   loadTemplateStyles(template);
 
-  const resume = createEmptyResume(template.id);
+  const draft = loadDraft();
+  const resume = draft && draft.templateId === template.id ? draft : createEmptyResume(template.id);
 
   container.innerHTML = `
     <div class="topbar"><a class="brand" href="#/">Resume Builder</a></div>
@@ -187,6 +189,7 @@ export function mount(container, query) {
 
   function renderPreview() {
     previewContent.innerHTML = template.render(resume);
+    saveDraft(resume);
   }
 
   function renderForm() {
