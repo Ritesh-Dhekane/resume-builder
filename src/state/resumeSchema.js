@@ -8,7 +8,7 @@ export function createEmptyResume(templateId) {
     id: uid(),
     templateId,
     meta: {
-      label: 'Untitled resume',
+      label: '',
       targetRole: '',
       jobDescriptionTag: '',
       savedAt: null,

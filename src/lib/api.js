@@ -15,3 +15,27 @@ export async function saveResumeToHistory(resume) {
     return null;
   }
 }
+
+// public/data/history.json and public/gallery/manifest.json are static
+// files: committed snapshots served as-is by both the dev server and the
+// deployed build (files outside public/ don't survive `vite build`).
+
+export async function fetchHistory() {
+  try {
+    const res = await fetch('/data/history.json');
+    if (!res.ok) return [];
+    return await res.json();
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchGalleryManifest() {
+  try {
+    const res = await fetch('/gallery/manifest.json');
+    if (!res.ok) return [];
+    return await res.json();
+  } catch {
+    return [];
+  }
+}

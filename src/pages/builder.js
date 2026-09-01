@@ -5,11 +5,12 @@ import {
   createEmptyExperience,
   createEmptyProject,
   createEmptySkillGroup,
+  uid,
 } from '../state/resumeSchema.js';
 import { downloadAsImage } from '../lib/exportImage.js';
 import { downloadAsPdf, isProEnabled } from '../lib/exportPdf.js';
 import { saveDraft, loadDraft, appendLocalHistory, downloadJson } from '../lib/storage.js';
-import { saveResumeToHistory } from '../lib/api.js';
+import { saveResumeToHistory, fetchHistory } from '../lib/api.js';
 
 function filenameFor(resume, ext) {
   const base = (resume.personal.name || 'resume').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -158,12 +159,25 @@ function renderFormHTML(resume) {
   `;
 }
 
-export function mount(container, query) {
+export async function mount(container, query) {
   const template = getTemplate(query.get('template'));
   loadTemplateStyles(template);
 
-  const draft = loadDraft();
-  const resume = draft && draft.templateId === template.id ? draft : createEmptyResume(template.id);
+  const draftId = query.get('draftId');
+  let resume;
+  if (draftId) {
+    const history = await fetchHistory();
+    const found = history.find((entry) => entry.id === draftId);
+    // Opening a saved draft starts a fresh copy — a new id and cleared
+    // savedAt — so hitting Save again adds a new tailored version instead
+    // of silently overwriting the one that was just opened.
+    resume = found
+      ? { ...JSON.parse(JSON.stringify(found)), id: uid(), meta: { ...found.meta, savedAt: null } }
+      : createEmptyResume(template.id);
+  } else {
+    const draft = loadDraft();
+    resume = draft && draft.templateId === template.id ? draft : createEmptyResume(template.id);
+  }
 
   container.innerHTML = `
     <div class="topbar"><a class="brand" href="#/">Resume Builder</a></div>

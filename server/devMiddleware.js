@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { GALLERY_DIR, writeManifest } from '../scripts/galleryManifest.js';
 
-const HISTORY_PATH = path.resolve(process.cwd(), 'data/history.json');
+const HISTORY_PATH = path.resolve(process.cwd(), 'public/data/history.json');
 
 function sanitizeFilename(name) {
   const base = path.basename(name || '').replace(/[^a-zA-Z0-9._-]/g, '-');

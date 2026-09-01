@@ -1,7 +1,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
-export const GALLERY_DIR = path.resolve(process.cwd(), 'gallery');
+export const GALLERY_DIR = path.resolve(process.cwd(), 'public/gallery');
 export const MANIFEST_PATH = path.join(GALLERY_DIR, 'manifest.json');
 
 export async function buildManifest() {
