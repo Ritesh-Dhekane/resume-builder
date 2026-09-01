@@ -8,7 +8,21 @@ function fitThumbnail(thumb, pageWidthPx) {
   inner.style.transform = `scale(${thumb.clientWidth / pageWidthPx})`;
 }
 
+// Scales down (never up) to fit the modal body's width — on a narrow
+// (mobile) viewport the modal is much narrower than the resume's true
+// 210mm width, and without this the template's own CSS (fixed-width rows,
+// justify-content:space-between) reflows badly instead of just shrinking.
+function fitModalPreview(outer, inner, pageWidthPx) {
+  const scale = Math.min(1, outer.clientWidth / pageWidthPx);
+  inner.style.transformOrigin = 'top left';
+  inner.style.width = `${pageWidthPx}px`;
+  inner.style.transform = `scale(${scale})`;
+  const page = inner.firstElementChild;
+  outer.style.height = page ? `${page.offsetHeight * scale}px` : '';
+}
+
 function openPreviewModal(template, placeholder) {
+  const pageWidthPx = template.pageWidthMm * MM_TO_PX;
   const backdrop = document.createElement('div');
   backdrop.className = 'preview-modal-backdrop';
   backdrop.innerHTML = `
@@ -20,13 +34,26 @@ function openPreviewModal(template, placeholder) {
           <button type="button" class="btn" id="preview-close-btn">Close</button>
         </div>
       </div>
-      <div class="preview-modal-body">${template.render(placeholder)}</div>
+      <div class="preview-modal-body">
+        <div class="preview-scale-outer" id="modal-scale-outer">
+          <div class="preview-frame" id="modal-scale-inner">${template.render(placeholder)}</div>
+        </div>
+      </div>
     </div>
   `;
   document.body.appendChild(backdrop);
 
+  const outer = backdrop.querySelector('#modal-scale-outer');
+  const inner = backdrop.querySelector('#modal-scale-inner');
+  function refit() {
+    fitModalPreview(outer, inner, pageWidthPx);
+  }
+  refit();
+  window.addEventListener('resize', refit);
+
   function close() {
     backdrop.remove();
+    window.removeEventListener('resize', refit);
     document.removeEventListener('keydown', onKeydown);
   }
   function onKeydown(event) {

@@ -22,5 +22,8 @@ Build order for the resume-builder app. See the approved plan for full context. 
 - [x] TASK-018: feat: widen the builder's form/preview layout
 - [x] TASK-019: feat: hide Save Info fields on the deployed build (import.meta.env.DEV)
 - [x] TASK-018b: fix: builder preview now scales to fit its column, form column widened for real
+- [x] TASK-018c: fix: builder grid to 30/70 form/preview split on desktop
+- [x] TASK-018d: fix: let builder preview scale up to fill wide column, capped at 1.6x
+- [x] TASK-021: fix: mobile optimization pass across gallery, builder, archive, preview modal
 
 Note: TASK-011/TASK-012 originally targeted `data/history.json` and `gallery/manifest.json` at the repo root; both moved under `public/` during TASK-014 because Vite only ships `public/` into the production build.

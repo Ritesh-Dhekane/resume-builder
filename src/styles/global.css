@@ -101,6 +101,12 @@ h1.page-title {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 20px;
+  /* Flex/grid items default to min-width:auto, which lets a descendant with
+     an explicit inline width (the JS-scaled resume preview/thumbnail) force
+     this card to stay near its max-width instead of shrinking to fit a
+     narrow viewport, even though that descendant is visually clipped by its
+     own overflow:hidden. min-width:0 overrides that. */
+  min-width: 0;
 }
 
 .grid {
