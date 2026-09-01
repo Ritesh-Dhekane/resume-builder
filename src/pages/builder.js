@@ -6,6 +6,13 @@ import {
   createEmptyProject,
   createEmptySkillGroup,
 } from '../state/resumeSchema.js';
+import { downloadAsImage } from '../lib/exportImage.js';
+import { downloadAsPdf, isProEnabled } from '../lib/exportPdf.js';
+
+function filenameFor(resume, ext) {
+  const base = (resume.personal.name || 'resume').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  return `${base || 'resume'}.${ext}`;
+}
 
 const ROW_FACTORIES = {
   education: createEmptyEducation,
@@ -162,6 +169,21 @@ export function mount(container, query) {
 
   const formPanel = container.querySelector('#form-panel');
   const previewContent = container.querySelector('#preview-content');
+  const btnImage = container.querySelector('#btn-image');
+  const btnPdf = container.querySelector('#btn-pdf');
+
+  btnImage.addEventListener('click', () => {
+    downloadAsImage(previewContent, filenameFor(resume, 'png'));
+  });
+
+  if (isProEnabled) {
+    btnPdf.addEventListener('click', () => {
+      downloadAsPdf(previewContent, filenameFor(resume, 'pdf'));
+    });
+  } else {
+    btnPdf.disabled = true;
+    btnPdf.title = 'PDF export is a pro feature. Set VITE_PRO_ENABLED=true in .env to enable it locally.';
+  }
 
   function renderPreview() {
     previewContent.innerHTML = template.render(resume);
