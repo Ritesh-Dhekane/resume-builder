@@ -5,6 +5,7 @@ import {
   createEmptyExperience,
   createEmptyProject,
   createEmptySkillGroup,
+  createPlaceholderResume,
   uid,
 } from '../state/resumeSchema.js';
 import { downloadAsImage } from '../lib/exportImage.js';
@@ -198,14 +199,28 @@ export async function mount(container, query) {
     </div>
   `;
 
+  const placeholder = createPlaceholderResume(template.id);
+
   const formPanel = container.querySelector('#form-panel');
   const previewContent = container.querySelector('#preview-content');
   const btnImage = container.querySelector('#btn-image');
   const btnPdf = container.querySelector('#btn-pdf');
   const btnSave = container.querySelector('#btn-save');
 
+  // Exports must only ever contain the user's real content — swap the
+  // preview to a plain (no ghost/placeholder) render just for the snapshot,
+  // then restore the live ghost-enabled preview afterward.
+  async function withRealRenderOnly(exportFn) {
+    previewContent.innerHTML = template.render(resume);
+    try {
+      await exportFn();
+    } finally {
+      renderPreview();
+    }
+  }
+
   btnImage.addEventListener('click', () => {
-    downloadAsImage(previewContent, filenameFor(resume, 'png'));
+    withRealRenderOnly(() => downloadAsImage(previewContent, filenameFor(resume, 'png')));
   });
 
   btnSave.addEventListener('click', async () => {
@@ -225,7 +240,7 @@ export async function mount(container, query) {
 
   if (isProEnabled) {
     btnPdf.addEventListener('click', () => {
-      downloadAsPdf(previewContent, filenameFor(resume, 'pdf'));
+      withRealRenderOnly(() => downloadAsPdf(previewContent, filenameFor(resume, 'pdf')));
     });
   } else {
     btnPdf.disabled = true;
@@ -233,7 +248,7 @@ export async function mount(container, query) {
   }
 
   function renderPreview() {
-    previewContent.innerHTML = template.render(resume);
+    previewContent.innerHTML = template.render(resume, placeholder);
     saveDraft(resume);
   }
 

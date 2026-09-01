@@ -71,6 +71,10 @@
   margin: 3px 0;
 }
 
+.jakes-resume .placeholder-text {
+  opacity: 0.42;
+}
+
 @media print {
   .jakes-resume {
     width: 210mm;
