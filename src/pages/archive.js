@@ -53,7 +53,7 @@ function renderPdfList(manifest) {
       <div class="card">
         <strong>${esc(entry.label)}</strong>
         <p class="page-subtitle">${esc(formatSize(entry.sizeBytes))} &middot; Added ${esc(formatDate(entry.modifiedAt))}</p>
-        <a class="btn" href="/gallery/${encodeURIComponent(entry.filename)}" target="_blank" rel="noopener">Open PDF</a>
+        <a class="btn" href="${import.meta.env.BASE_URL}gallery/${encodeURIComponent(entry.filename)}" target="_blank" rel="noopener">Open PDF</a>
       </div>`
     )
     .join('')}</div>`;
