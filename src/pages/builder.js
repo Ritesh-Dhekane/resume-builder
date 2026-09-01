@@ -132,9 +132,13 @@ function saveInfoFields(meta) {
 }
 
 function renderFormHTML(resume) {
+  // Save Info only matters for the local history workflow (dev-only), so it
+  // never appears in a deployed build.
+  const saveInfoSection = import.meta.env.DEV
+    ? `<h2>Save Info</h2>${saveInfoFields(resume.meta)}`
+    : '';
   return `
-    <h2>Save Info</h2>
-    ${saveInfoFields(resume.meta)}
+    ${saveInfoSection}
 
     <h2>Personal</h2>
     ${personalFields(resume.personal)}
