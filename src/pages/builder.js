@@ -182,7 +182,7 @@ export async function mount(container, query) {
 
   container.innerHTML = `
     <div class="topbar"><a class="brand" href="#/">Resume Builder</a></div>
-    <div class="container">
+    <div class="container-wide">
       <h1 class="page-title">Builder</h1>
       <p class="page-subtitle">Template: ${esc(template.name)}</p>
       <div class="actions">
@@ -190,7 +190,7 @@ export async function mount(container, query) {
         <button type="button" class="btn btn-primary" id="btn-pdf">Download as PDF</button>
         <button type="button" class="btn" id="btn-save">Save</button>
       </div>
-      <div class="grid grid-2">
+      <div class="grid builder-grid">
         <div class="card" id="form-panel"></div>
         <div class="card">
           <div class="preview-frame" id="preview-content"></div>

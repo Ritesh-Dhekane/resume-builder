@@ -29,6 +29,12 @@ a {
   padding: 24px 20px 60px;
 }
 
+.container-wide {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
 .topbar {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -106,8 +112,13 @@ h1.page-title {
   grid-template-columns: 1fr 1fr;
 }
 
+.builder-grid {
+  grid-template-columns: minmax(420px, 1fr) minmax(480px, 1.3fr);
+}
+
 @media (max-width: 900px) {
-  .grid-2 {
+  .grid-2,
+  .builder-grid {
     grid-template-columns: 1fr;
   }
 }
