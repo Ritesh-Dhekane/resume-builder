@@ -14,3 +14,13 @@ export const templates = [
 export function getTemplate(id) {
   return templates.find((t) => t.id === id) || templates[0];
 }
+
+export function loadTemplateStyles(template) {
+  const linkId = `template-style-${template.id}`;
+  if (document.getElementById(linkId)) return;
+  const link = document.createElement('link');
+  link.id = linkId;
+  link.rel = 'stylesheet';
+  link.href = template.styleUrl;
+  document.head.appendChild(link);
+}

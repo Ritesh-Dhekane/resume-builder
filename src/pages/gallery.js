@@ -1,16 +1,6 @@
-import { templates } from '../templates/registry.js';
+import { templates, loadTemplateStyles } from '../templates/registry.js';
 import { createPlaceholderResume } from '../state/resumeSchema.js';
 import { navigate } from '../lib/router.js';
-
-function ensureStylesLoaded(template) {
-  const linkId = `template-style-${template.id}`;
-  if (document.getElementById(linkId)) return;
-  const link = document.createElement('link');
-  link.id = linkId;
-  link.rel = 'stylesheet';
-  link.href = template.styleUrl;
-  document.head.appendChild(link);
-}
 
 export function mount(container) {
   container.innerHTML = `
@@ -25,7 +15,7 @@ export function mount(container) {
   const grid = container.querySelector('#template-grid');
 
   templates.forEach((template) => {
-    ensureStylesLoaded(template);
+    loadTemplateStyles(template);
     const placeholder = createPlaceholderResume(template.id);
 
     const card = document.createElement('div');
