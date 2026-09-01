@@ -113,10 +113,7 @@ h1.page-title {
 }
 
 .builder-grid {
-  /* The preview scales down to fit its column (see fitPreviewScale in
-     builder.js), so it no longer needs to stay wide enough for the resume's
-     true 210mm width — the form column can take the larger share. */
-  grid-template-columns: minmax(480px, 1.6fr) minmax(320px, 1fr);
+  grid-template-columns: 30% 70%;
 }
 
 @media (max-width: 900px) {
