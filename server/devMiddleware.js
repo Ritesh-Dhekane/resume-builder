@@ -1,7 +1,23 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { GALLERY_DIR, writeManifest } from '../scripts/galleryManifest.js';
 
 const HISTORY_PATH = path.resolve(process.cwd(), 'data/history.json');
+
+function sanitizeFilename(name) {
+  const base = path.basename(name || '').replace(/[^a-zA-Z0-9._-]/g, '-');
+  const safe = base || `resume-${Date.now()}.pdf`;
+  return safe.toLowerCase().endsWith('.pdf') ? safe : `${safe}.pdf`;
+}
+
+function readRawBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    req.on('data', (chunk) => chunks.push(chunk));
+    req.on('end', () => resolve(Buffer.concat(chunks)));
+    req.on('error', reject);
+  });
+}
 
 async function readHistory() {
   try {
@@ -56,6 +72,27 @@ export function devHistoryPlugin() {
         }
         res.statusCode = 405;
         res.end();
+      });
+
+      server.middlewares.use('/api/gallery-upload', async (req, res) => {
+        if (req.method !== 'POST') {
+          res.statusCode = 405;
+          res.end();
+          return;
+        }
+        try {
+          const url = new URL(req.url, 'http://localhost');
+          const filename = sanitizeFilename(url.searchParams.get('filename'));
+          const buffer = await readRawBody(req);
+          await fs.mkdir(GALLERY_DIR, { recursive: true });
+          await fs.writeFile(path.join(GALLERY_DIR, filename), buffer);
+          const manifest = await writeManifest();
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ ok: true, filename, manifest }));
+        } catch (err) {
+          res.statusCode = 400;
+          res.end(JSON.stringify({ ok: false, error: String(err) }));
+        }
       });
     },
   };
