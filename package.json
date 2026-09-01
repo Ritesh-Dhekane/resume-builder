@@ -1,0 +1,19 @@
+{
+  "name": "resume-builder",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "gallery:manifest": "node scripts/generate-gallery-manifest.js"
+  },
+  "dependencies": {
+    "html2canvas": "^1.4.1",
+    "html2pdf.js": "^0.14.0"
+  },
+  "devDependencies": {
+    "vite": "^8.2.2"
+  }
+}
