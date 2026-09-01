@@ -17,5 +17,6 @@ Build order for the resume-builder app. See the approved plan for full context. 
 - [x] TASK-013: feat: password gate — build-time hash injection + client check (src/pages/auth.js)
 - [x] TASK-014: feat: Resume Archive page — Saved Drafts + Uploaded PDFs tabs (src/pages/archive.js)
 - [x] TASK-015: chore: GitHub Actions deploy.yml + .env.example + README notes on security tradeoff
+- [x] TASK-016: feat: larger gallery thumbnails + a "Preview" button showing the full template in a modal
 
 Note: TASK-011/TASK-012 originally targeted `data/history.json` and `gallery/manifest.json` at the repo root; both moved under `public/` during TASK-014 because Vite only ships `public/` into the production build.

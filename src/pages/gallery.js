@@ -8,6 +8,42 @@ function fitThumbnail(thumb, pageWidthPx) {
   inner.style.transform = `scale(${thumb.clientWidth / pageWidthPx})`;
 }
 
+function openPreviewModal(template, placeholder) {
+  const backdrop = document.createElement('div');
+  backdrop.className = 'preview-modal-backdrop';
+  backdrop.innerHTML = `
+    <div class="preview-modal">
+      <div class="preview-modal-header">
+        <h3>${template.name} &mdash; full preview</h3>
+        <div class="actions" style="margin:0;">
+          <button type="button" class="btn btn-primary" id="preview-use-btn">Use this template</button>
+          <button type="button" class="btn" id="preview-close-btn">Close</button>
+        </div>
+      </div>
+      <div class="preview-modal-body">${template.render(placeholder)}</div>
+    </div>
+  `;
+  document.body.appendChild(backdrop);
+
+  function close() {
+    backdrop.remove();
+    document.removeEventListener('keydown', onKeydown);
+  }
+  function onKeydown(event) {
+    if (event.key === 'Escape') close();
+  }
+
+  backdrop.addEventListener('click', (event) => {
+    if (event.target === backdrop) close();
+  });
+  backdrop.querySelector('#preview-close-btn').addEventListener('click', close);
+  backdrop.querySelector('#preview-use-btn').addEventListener('click', () => {
+    close();
+    navigate(`/builder?template=${template.id}`);
+  });
+  document.addEventListener('keydown', onKeydown);
+}
+
 export function mount(container) {
   container.innerHTML = `
     <div class="topbar"><a class="brand" href="#/">Resume Builder</a></div>
@@ -34,10 +70,16 @@ export function mount(container) {
       </div>
       <h3>${template.name}</h3>
       <p class="page-subtitle">${template.description}</p>
-      <button type="button" class="btn btn-primary use-template">Use this template</button>
+      <div class="actions" style="margin:0;">
+        <button type="button" class="btn preview-template">Preview</button>
+        <button type="button" class="btn btn-primary use-template">Use this template</button>
+      </div>
     `;
     card.querySelector('.use-template').addEventListener('click', () => {
       navigate(`/builder?template=${template.id}`);
+    });
+    card.querySelector('.preview-template').addEventListener('click', () => {
+      openPreviewModal(template, placeholder);
     });
     grid.appendChild(card);
 
