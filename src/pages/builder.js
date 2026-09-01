@@ -214,10 +214,11 @@ export async function mount(container, query) {
   const btnPdf = container.querySelector('#btn-pdf');
   const btnSave = container.querySelector('#btn-save');
 
-  // The live preview scales down to fit its column (never up) instead of
+  // The live preview scales to fill its column (up or down) instead of
   // staying pinned at the resume's true 210mm width, so the column doesn't
   // need to stay wide enough to avoid clipping it — freeing the form column
-  // to take the extra space.
+  // to take less space. Capped at 1.6x so it doesn't zoom in excessively on
+  // very wide screens.
   //
   // Width uses the known mm->px page width rather than measuring the
   // rendered page's offsetWidth, because that measurement would race the
@@ -226,10 +227,11 @@ export async function mount(container, query) {
   // fixed value (it depends on content and the loaded CSS), so it's
   // measured live and re-fit once the stylesheet actually loads.
   const pageWidthPx = template.pageWidthMm * MM_TO_PX;
+  const MAX_PREVIEW_SCALE = 1.6;
   function fitPreviewScale() {
     const page = previewContent.firstElementChild;
     if (!page) return;
-    const scale = Math.min(1, previewScaleOuter.clientWidth / pageWidthPx);
+    const scale = Math.min(MAX_PREVIEW_SCALE, previewScaleOuter.clientWidth / pageWidthPx);
     previewContent.style.transformOrigin = 'top left';
     previewContent.style.width = `${pageWidthPx}px`;
     previewContent.style.transform = `scale(${scale})`;
