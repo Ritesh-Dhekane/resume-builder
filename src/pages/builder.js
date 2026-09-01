@@ -8,7 +8,8 @@ import {
 } from '../state/resumeSchema.js';
 import { downloadAsImage } from '../lib/exportImage.js';
 import { downloadAsPdf, isProEnabled } from '../lib/exportPdf.js';
-import { saveDraft, loadDraft } from '../lib/storage.js';
+import { saveDraft, loadDraft, appendLocalHistory, downloadJson } from '../lib/storage.js';
+import { saveResumeToHistory } from '../lib/api.js';
 
 function filenameFor(resume, ext) {
   const base = (resume.personal.name || 'resume').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -117,8 +118,22 @@ function addButton(section, label) {
   return `<button type="button" class="btn" data-add="${section}">${label}</button>`;
 }
 
+function saveInfoFields(meta) {
+  const fields = [
+    ['label', 'Label (for history)'],
+    ['targetRole', 'Target role'],
+    ['jobDescriptionTag', 'Job description tag'],
+  ];
+  return fields
+    .map(([key, label]) => field(label, textInput(`data-path="meta.${key}"`, meta[key])))
+    .join('');
+}
+
 function renderFormHTML(resume) {
   return `
+    <h2>Save Info</h2>
+    ${saveInfoFields(resume.meta)}
+
     <h2>Personal</h2>
     ${personalFields(resume.personal)}
 
@@ -173,9 +188,25 @@ export function mount(container, query) {
   const previewContent = container.querySelector('#preview-content');
   const btnImage = container.querySelector('#btn-image');
   const btnPdf = container.querySelector('#btn-pdf');
+  const btnSave = container.querySelector('#btn-save');
 
   btnImage.addEventListener('click', () => {
     downloadAsImage(previewContent, filenameFor(resume, 'png'));
+  });
+
+  btnSave.addEventListener('click', async () => {
+    const result = await saveResumeToHistory(resume);
+    if (result) {
+      alert('Saved to local history (data/history.json).');
+      return;
+    }
+    const snapshot = { ...resume, meta: { ...resume.meta, savedAt: new Date().toISOString() } };
+    appendLocalHistory(snapshot);
+    downloadJson(snapshot, filenameFor(resume, 'json'));
+    alert(
+      'No local dev server detected. Saved a copy in this browser and downloaded a JSON file — ' +
+        'drop it into data/history.json if you want it in the shared archive.'
+    );
   });
 
   if (isProEnabled) {
