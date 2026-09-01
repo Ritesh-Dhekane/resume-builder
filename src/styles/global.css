@@ -113,7 +113,10 @@ h1.page-title {
 }
 
 .builder-grid {
-  grid-template-columns: minmax(420px, 1fr) minmax(480px, 1.3fr);
+  /* The preview scales down to fit its column (see fitPreviewScale in
+     builder.js), so it no longer needs to stay wide enough for the resume's
+     true 210mm width — the form column can take the larger share. */
+  grid-template-columns: minmax(480px, 1.6fr) minmax(320px, 1fr);
 }
 
 @media (max-width: 900px) {
@@ -171,11 +174,17 @@ h1.page-title {
   margin: 16px 0;
 }
 
-.preview-frame {
+.preview-scale-outer {
   width: 100%;
-  min-height: 297mm;
+  min-height: 200px;
+  overflow: hidden;
   border: 1px solid var(--border);
-  background: #fff;
+  border-radius: 6px;
+  background: #f8fafc;
+}
+
+.preview-frame {
+  transform-origin: top left;
 }
 
 .template-grid {

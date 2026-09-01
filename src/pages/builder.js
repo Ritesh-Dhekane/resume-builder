@@ -1,4 +1,4 @@
-import { getTemplate, loadTemplateStyles } from '../templates/registry.js';
+import { getTemplate, loadTemplateStyles, MM_TO_PX } from '../templates/registry.js';
 import {
   createEmptyResume,
   createEmptyEducation,
@@ -166,7 +166,7 @@ function renderFormHTML(resume) {
 
 export async function mount(container, query) {
   const template = getTemplate(query.get('template'));
-  loadTemplateStyles(template);
+  const styleLink = loadTemplateStyles(template);
 
   const draftId = query.get('draftId');
   let resume;
@@ -197,7 +197,9 @@ export async function mount(container, query) {
       <div class="grid builder-grid">
         <div class="card" id="form-panel"></div>
         <div class="card">
-          <div class="preview-frame" id="preview-content"></div>
+          <div class="preview-scale-outer" id="preview-scale-outer">
+            <div class="preview-frame" id="preview-content"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -206,15 +208,43 @@ export async function mount(container, query) {
   const placeholder = createPlaceholderResume(template.id);
 
   const formPanel = container.querySelector('#form-panel');
+  const previewScaleOuter = container.querySelector('#preview-scale-outer');
   const previewContent = container.querySelector('#preview-content');
   const btnImage = container.querySelector('#btn-image');
   const btnPdf = container.querySelector('#btn-pdf');
   const btnSave = container.querySelector('#btn-save');
 
-  // Exports must only ever contain the user's real content — swap the
-  // preview to a plain (no ghost/placeholder) render just for the snapshot,
-  // then restore the live ghost-enabled preview afterward.
+  // The live preview scales down to fit its column (never up) instead of
+  // staying pinned at the resume's true 210mm width, so the column doesn't
+  // need to stay wide enough to avoid clipping it — freeing the form column
+  // to take the extra space.
+  //
+  // Width uses the known mm->px page width rather than measuring the
+  // rendered page's offsetWidth, because that measurement would race the
+  // template stylesheet's load (same class of bug already hit once with the
+  // gallery thumbnails — see templates/registry.js). Height has no such
+  // fixed value (it depends on content and the loaded CSS), so it's
+  // measured live and re-fit once the stylesheet actually loads.
+  const pageWidthPx = template.pageWidthMm * MM_TO_PX;
+  function fitPreviewScale() {
+    const page = previewContent.firstElementChild;
+    if (!page) return;
+    const scale = Math.min(1, previewScaleOuter.clientWidth / pageWidthPx);
+    previewContent.style.transformOrigin = 'top left';
+    previewContent.style.width = `${pageWidthPx}px`;
+    previewContent.style.transform = `scale(${scale})`;
+    previewScaleOuter.style.height = `${page.offsetHeight * scale}px`;
+  }
+  if (!styleLink.sheet) {
+    styleLink.addEventListener('load', () => fitPreviewScale(), { once: true });
+  }
+
+  // Exports must only ever contain the user's real content at true size —
+  // swap the preview to a plain (no ghost/placeholder), unscaled render just
+  // for the snapshot, then restore the live scaled/ghost-enabled preview.
   async function withRealRenderOnly(exportFn) {
+    previewContent.style.transform = 'none';
+    previewContent.style.width = '';
     previewContent.innerHTML = template.render(resume);
     try {
       await exportFn();
@@ -253,6 +283,7 @@ export async function mount(container, query) {
 
   function renderPreview() {
     previewContent.innerHTML = template.render(resume, placeholder);
+    fitPreviewScale();
     saveDraft(resume);
   }
 
@@ -297,4 +328,9 @@ export async function mount(container, query) {
 
   renderForm();
   renderPreview();
+
+  window.addEventListener('resize', fitPreviewScale);
+  window.addEventListener('hashchange', () => window.removeEventListener('resize', fitPreviewScale), {
+    once: true,
+  });
 }

@@ -21,12 +21,17 @@ export function getTemplate(id) {
   return templates.find((t) => t.id === id) || templates[0];
 }
 
+// Returns the <link> element (existing or newly created) so callers that
+// need to know once it's actually loaded (e.g. before measuring rendered
+// content) can check link.sheet / listen for its 'load' event.
 export function loadTemplateStyles(template) {
   const linkId = `template-style-${template.id}`;
-  if (document.getElementById(linkId)) return;
+  const existing = document.getElementById(linkId);
+  if (existing) return existing;
   const link = document.createElement('link');
   link.id = linkId;
   link.rel = 'stylesheet';
   link.href = template.styleUrl;
   document.head.appendChild(link);
+  return link;
 }
