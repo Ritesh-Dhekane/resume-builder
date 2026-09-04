@@ -25,5 +25,8 @@ Build order for the resume-builder app. See the approved plan for full context. 
 - [x] TASK-018c: fix: builder grid to 30/70 form/preview split on desktop
 - [x] TASK-018d: fix: let builder preview scale up to fill wide column, capped at 1.6x
 - [x] TASK-021: fix: mobile optimization pass across gallery, builder, archive, preview modal
+- [x] TASK-022: feat: show/hide toggle on the archive password field
+- [ ] TASK-023: feat: paginate the builder's live preview into real A4 pages
+- [ ] TASK-024: feat: make the exported PDF match the on-screen pages exactly
 
 Note: TASK-011/TASK-012 originally targeted `data/history.json` and `gallery/manifest.json` at the repo root; both moved under `public/` during TASK-014 because Vite only ships `public/` into the production build.

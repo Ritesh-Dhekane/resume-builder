@@ -16,6 +16,11 @@ export function isUnlocked() {
   }
 }
 
+const EYE_ICON =
+  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>';
+const EYE_OFF_ICON =
+  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.53 13.53 0 0 0 1 12s4 8 11 8a9.26 9.26 0 0 0 5.39-1.61"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+
 export function renderGate(container, onUnlock) {
   container.innerHTML = `
     <div class="topbar"><a class="brand" href="#/">Resume Builder</a></div>
@@ -23,7 +28,12 @@ export function renderGate(container, onUnlock) {
       <div class="card" style="max-width:360px;margin:60px auto;">
         <h2 style="margin-top:0;">Archive access</h2>
         <p class="page-subtitle">Enter the password to view saved drafts and uploaded PDFs.</p>
-        <div class="field"><input type="password" id="gate-password" autofocus /></div>
+        <div class="field">
+          <div class="password-field">
+            <input type="password" id="gate-password" autofocus />
+            <button type="button" class="password-toggle" id="gate-toggle" aria-label="Show password">${EYE_ICON}</button>
+          </div>
+        </div>
         <button type="button" class="btn btn-primary" id="gate-submit">Unlock</button>
         <p id="gate-error" style="color:#b91c1c;font-size:12px;display:none;">Incorrect password.</p>
       </div>
@@ -32,6 +42,15 @@ export function renderGate(container, onUnlock) {
 
   const input = container.querySelector('#gate-password');
   const error = container.querySelector('#gate-error');
+  const toggle = container.querySelector('#gate-toggle');
+
+  toggle.addEventListener('click', () => {
+    const showing = input.type === 'text';
+    input.type = showing ? 'password' : 'text';
+    toggle.innerHTML = showing ? EYE_ICON : EYE_OFF_ICON;
+    toggle.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+    input.focus();
+  });
 
   async function attempt() {
     const hash = await sha256Hex(input.value);
