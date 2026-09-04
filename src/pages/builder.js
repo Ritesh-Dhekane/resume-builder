@@ -253,10 +253,14 @@ export async function mount(container, query) {
   // Exports must only ever contain the user's real content at true size —
   // swap the preview to a plain (no ghost/placeholder), unscaled render just
   // for the snapshot, then restore the live scaled/ghost-enabled preview.
-  async function withRealRenderOnly(exportFn) {
+  // `setupContent` decides what that plain render looks like: a single
+  // continuous blob for the image export (no inherent "pages"), or the same
+  // paginated page split the live preview uses for the PDF export, so the
+  // download matches exactly what was just previewed.
+  async function withRealRenderOnly(setupContent, exportFn) {
     previewContent.style.transform = 'none';
     previewContent.style.width = '';
-    previewContent.innerHTML = template.render(resume);
+    setupContent();
     try {
       await exportFn();
     } finally {
@@ -264,8 +268,21 @@ export async function mount(container, query) {
     }
   }
 
+  function renderPlainSinglePage() {
+    previewContent.innerHTML = template.render(resume);
+  }
+
+  function renderPlainPaginated() {
+    previewContent.innerHTML = template.render(resume);
+    const measureRoot = previewContent.firstElementChild;
+    const pages = paginate(measureRoot, pageContentHeightPx);
+    previewContent.innerHTML = pages.map((html) => `<div class="jakes-resume">${html}</div>`).join('');
+  }
+
   btnImage.addEventListener('click', () => {
-    withRealRenderOnly(() => downloadAsImage(previewContent, filenameFor(resume, 'png')));
+    withRealRenderOnly(renderPlainSinglePage, () =>
+      downloadAsImage(previewContent, filenameFor(resume, 'png'))
+    );
   });
 
   btnSave.addEventListener('click', async () => {
@@ -285,7 +302,9 @@ export async function mount(container, query) {
 
   if (isProEnabled) {
     btnPdf.addEventListener('click', () => {
-      withRealRenderOnly(() => downloadAsPdf(previewContent, filenameFor(resume, 'pdf')));
+      withRealRenderOnly(renderPlainPaginated, () =>
+        downloadAsPdf(Array.from(previewContent.children), filenameFor(resume, 'pdf'))
+      );
     });
   } else {
     btnPdf.disabled = true;

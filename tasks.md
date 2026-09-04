@@ -27,6 +27,6 @@ Build order for the resume-builder app. See the approved plan for full context. 
 - [x] TASK-021: fix: mobile optimization pass across gallery, builder, archive, preview modal
 - [x] TASK-022: feat: show/hide toggle on the archive password field
 - [x] TASK-023: feat: paginate the builder's live preview into real A4 pages
-- [ ] TASK-024: feat: make the exported PDF match the on-screen pages exactly
+- [x] TASK-024: feat: make the exported PDF match the on-screen pages exactly
 
 Note: TASK-011/TASK-012 originally targeted `data/history.json` and `gallery/manifest.json` at the repo root; both moved under `public/` during TASK-014 because Vite only ships `public/` into the production build.
