@@ -12,6 +12,13 @@ import { downloadAsImage } from '../lib/exportImage.js';
 import { downloadAsPdf, isProEnabled } from '../lib/exportPdf.js';
 import { saveDraft, loadDraft, appendLocalHistory, downloadJson } from '../lib/storage.js';
 import { saveResumeToHistory, fetchHistory } from '../lib/api.js';
+import { paginate } from '../lib/paginate.js';
+
+// A4 is 297mm tall; the template's own padding (jakes-resume/style.css,
+// `padding: 16mm 18mm`) eats into that on every page, so the pagination
+// budget is the page height minus top+bottom padding, not the full 297mm.
+const PAGE_HEIGHT_MM = 297;
+const PAGE_VERTICAL_PADDING_MM = 32; // 16mm top + 16mm bottom
 
 function filenameFor(resume, ext) {
   const base = (resume.personal.name || 'resume').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -227,15 +234,17 @@ export async function mount(container, query) {
   // fixed value (it depends on content and the loaded CSS), so it's
   // measured live and re-fit once the stylesheet actually loads.
   const pageWidthPx = template.pageWidthMm * MM_TO_PX;
+  const pageContentHeightPx = (PAGE_HEIGHT_MM - PAGE_VERTICAL_PADDING_MM) * MM_TO_PX;
   const MAX_PREVIEW_SCALE = 1.6;
+  // scrollHeight covers the full stack when the preview has multiple pages
+  // (see renderPreview/paginate below), not just a single page's height.
   function fitPreviewScale() {
-    const page = previewContent.firstElementChild;
-    if (!page) return;
+    if (!previewContent.firstElementChild) return;
     const scale = Math.min(MAX_PREVIEW_SCALE, previewScaleOuter.clientWidth / pageWidthPx);
     previewContent.style.transformOrigin = 'top left';
     previewContent.style.width = `${pageWidthPx}px`;
     previewContent.style.transform = `scale(${scale})`;
-    previewScaleOuter.style.height = `${page.offsetHeight * scale}px`;
+    previewScaleOuter.style.height = `${previewContent.scrollHeight * scale}px`;
   }
   if (!styleLink.sheet) {
     styleLink.addEventListener('load', () => fitPreviewScale(), { once: true });
@@ -284,7 +293,17 @@ export async function mount(container, query) {
   }
 
   function renderPreview() {
+    // Render once, unscaled, purely to measure natural section/entry heights
+    // for pagination (accurate layout requires a real, laid-out, untransformed
+    // node) — then replace with the paginated multi-page HTML below.
+    previewContent.style.transform = 'none';
+    previewContent.style.width = `${pageWidthPx}px`;
     previewContent.innerHTML = template.render(resume, placeholder);
+    const measureRoot = previewContent.firstElementChild;
+    const pages = paginate(measureRoot, pageContentHeightPx);
+    previewContent.innerHTML = pages
+      .map((html) => `<div class="jakes-resume resume-page">${html}</div>`)
+      .join('');
     fitPreviewScale();
     saveDraft(resume);
   }

@@ -47,13 +47,15 @@ function renderEducation(education, placeholderEducation, ghost) {
   return rows
     .map(
       (edu) => `
-      <div class="row${ghostCls}">
-        <strong>${escapeHtml(edu.degree)}</strong>
-        <strong>${escapeHtml(edu.year)}</strong>
-      </div>
-      <div class="row muted${ghostCls}">
-        <span>${escapeHtml(edu.institution)}</span>
-        <span>${escapeHtml(edu.location)}</span>
+      <div class="entry">
+        <div class="row${ghostCls}">
+          <strong>${escapeHtml(edu.degree)}</strong>
+          <strong>${escapeHtml(edu.year)}</strong>
+        </div>
+        <div class="row muted${ghostCls}">
+          <span>${escapeHtml(edu.institution)}</span>
+          <span>${escapeHtml(edu.location)}</span>
+        </div>
       </div>`
     )
     .join('');
@@ -66,15 +68,17 @@ function renderExperience(experience, placeholderExperience, ghost) {
   return rows
     .map(
       (job) => `
-      <div class="row${ghostCls}">
-        <strong>${escapeHtml(job.title)}</strong>
-        <strong>${escapeHtml(job.start)} &ndash; ${escapeHtml(job.end)}</strong>
-      </div>
-      <div class="row muted${ghostCls}">
-        <span>${escapeHtml(job.employer)}</span>
-        <span>${escapeHtml(job.location)}</span>
-      </div>
-      ${renderBullets(job.bullets, ghostCls.trim())}`
+      <div class="entry">
+        <div class="row${ghostCls}">
+          <strong>${escapeHtml(job.title)}</strong>
+          <strong>${escapeHtml(job.start)} &ndash; ${escapeHtml(job.end)}</strong>
+        </div>
+        <div class="row muted${ghostCls}">
+          <span>${escapeHtml(job.employer)}</span>
+          <span>${escapeHtml(job.location)}</span>
+        </div>
+        ${renderBullets(job.bullets, ghostCls.trim())}
+      </div>`
     )
     .join('');
 }
@@ -86,11 +90,13 @@ function renderProjects(projects, placeholderProjects, ghost) {
   return rows
     .map(
       (proj) => `
-      <div class="row${ghostCls}">
-        <strong>${escapeHtml(proj.title)}${proj.skills ? ` | ${escapeHtml(proj.skills)}` : ''}</strong>
-        <strong>${escapeHtml(proj.start)} &ndash; ${escapeHtml(proj.end)}</strong>
-      </div>
-      ${renderBullets(proj.bullets, ghostCls.trim())}`
+      <div class="entry">
+        <div class="row${ghostCls}">
+          <strong>${escapeHtml(proj.title)}${proj.skills ? ` | ${escapeHtml(proj.skills)}` : ''}</strong>
+          <strong>${escapeHtml(proj.start)} &ndash; ${escapeHtml(proj.end)}</strong>
+        </div>
+        ${renderBullets(proj.bullets, ghostCls.trim())}
+      </div>`
     )
     .join('');
 }
