@@ -1,1 +1,176 @@
-[]
+[
+  {
+    "id": "master-resume-2026-09-04",
+    "templateId": "jakes-resume",
+    "meta": {
+      "label": "Master Resume — Full Stack Java Developer",
+      "targetRole": "Full Stack Java Developer",
+      "jobDescriptionTag": "",
+      "savedAt": "2026-09-04T15:53:27.000Z"
+    },
+    "personal": {
+      "name": "Ritesh Dhekane",
+      "title": "Software Engineer | Full Stack Java Developer",
+      "phone": "+91 9322527567",
+      "email": "ritesh.dhekane@outlook.com",
+      "location": "Pune, Maharashtra, India",
+      "linkedin": "linkedin.com/in/riteshdhekane",
+      "website": "github.com/Ritesh-Dhekane"
+    },
+    "summary": "Software Engineer with professional experience developing and maintaining full-stack applications using Java, Spring Boot, React, TypeScript, and JavaScript. Hands-on experience building REST APIs, working with PostgreSQL and AWS services including S3 and Cognito, and integrating third-party systems across multiple services. Experienced in solving production issues, debugging complex system behaviour, implementing automated testing, and contributing to software design and architecture in collaboration with senior developers and architects. Strong exposure to Agile development, code reviews, version control, and real-world software engineering practices.",
+    "education": [
+      {
+        "id": "edu-1",
+        "degree": "Master of Computer Applications",
+        "institution": "Kamla Education Society's Pratibha Institute of Business Management",
+        "location": "Chinchwad, Pune",
+        "year": "2026 – Present"
+      },
+      {
+        "id": "edu-2",
+        "degree": "Bachelor of Science in Computer Science (CGPA 8.82)",
+        "institution": "Dr. D. Y. Patil Science and Computer Science College",
+        "location": "Akurdi, Pune",
+        "year": "2022 – 2025"
+      },
+      {
+        "id": "edu-3",
+        "degree": "Higher Secondary (12th Grade) — 66.50%",
+        "institution": "Aabasaheb Garware College",
+        "location": "Pune",
+        "year": "2020 – 2022"
+      }
+    ],
+    "experience": [
+      {
+        "id": "exp-1",
+        "title": "Software Engineer",
+        "employer": "FLX Cloud Services",
+        "location": "Pune, Maharashtra",
+        "start": "Jun 2025",
+        "end": "Present",
+        "bullets": [
+          "Designed and implemented full-stack features across Spring Boot backend services and React/TypeScript frontend applications, developing REST APIs, database changes, and corresponding user interfaces within a multi-service system.",
+          "Diagnosed and resolved a concurrency race condition involving asynchronous third-party webhook processing and internal database transactions, applying pessimistic row-level locking to improve reliability and prevent inconsistent system state.",
+          "Redesigned multi-provider dispatch logic to improve fallback scheduling, ensuring secondary transportation providers are engaged only after primary-provider search criteria are exhausted and eliminating redundant scheduling operations.",
+          "Applied the Strategy design pattern to OTP generation and extended an OAuth2/AWS Cognito authentication flow to handle identity-provider challenge sequences, improving authentication flexibility across environments.",
+          "Contributed to relational data modelling for distinct enterprise and retail account types and implemented the associated customer-management interface using React and TypeScript with typed API contracts.",
+          "Extended backend services with PostgreSQL schema migrations and AWS S3 presigned-URL file uploads, adding automated tests to validate API and controller behaviour.",
+          "Integrated a third-party payment gateway into a patient-facing payment workflow and refactored duplicated filtering logic into reusable components across multiple billing views.",
+          "Investigated and resolved production issues across frontend and backend services while collaborating with senior developers and architects through an Agile development workflow using Jira, GitHub, and Bitbucket."
+        ]
+      },
+      {
+        "id": "exp-2",
+        "title": "Software Engineer Intern",
+        "employer": "FLX Cloud Services",
+        "location": "Pune, Maharashtra",
+        "start": "Jan 2025",
+        "end": "Apr 2025",
+        "bullets": [
+          "Designed and implemented scalable data pipelines using Apache Spark and Azure Data Factory for efficient data processing and storage.",
+          "Developed ETL workflows to extract, transform, and load large datasets across cloud platforms including AWS S3 and Azure Blob Storage.",
+          "Worked with cloud-based storage solutions while focusing on data integrity, secure data handling, and efficient processing for analytics workloads."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "id": "proj-1",
+        "title": "HRStack",
+        "skills": "Java 17, Spring Boot 3, Spring Security, JWT, PostgreSQL, JPA/Hibernate, React 19, TypeScript, Vite",
+        "start": "",
+        "end": "In progress",
+        "bullets": [
+          "Built the backend and frontend foundations of a multi-tenant employee-management platform with company, user, authentication, authorization, and employee-management workflows.",
+          "Implemented stateless JWT authentication using Spring Security, BCrypt password hashing, custom authentication filters, and method-level authorization.",
+          "Enforced row-level tenant isolation by deriving company scope from the authenticated principal and restricting database operations to the authenticated company.",
+          "Implemented REST APIs using a controller-service-repository architecture with DTOs, Bean Validation, centralized exception handling, and PostgreSQL persistence.",
+          "Built a React 19 and TypeScript SPA with protected routes, Axios authentication handling, and employee-management workflows.",
+          "Created a companion Project OS repository containing architecture decisions, database/schema documentation, workflows, structured backlog data, and AI-consumable project context."
+        ]
+      },
+      {
+        "id": "proj-2",
+        "title": "Resume Builder",
+        "skills": "React, TypeScript, Vite, JavaScript, GitHub Pages",
+        "start": "",
+        "end": "Active",
+        "bullets": [
+          "Built an interactive resume builder with template selection, structured form input, and live resume preview.",
+          "Implemented client-side resume export functionality for image and PDF output.",
+          "Developed a development-only persistence workflow for saving resume drafts and uploading reference PDFs.",
+          "Implemented a static GitHub Pages deployment pipeline using GitHub Actions.",
+          "Designed the application to operate without a production backend while keeping development-only persistence isolated from the deployed build."
+        ]
+      },
+      {
+        "id": "proj-3",
+        "title": "2AM Notes",
+        "skills": "React, Vite, Tailwind CSS, React Router, react-markdown, remark-gfm, GitHub Actions, GitHub Pages",
+        "start": "",
+        "end": "Active",
+        "bullets": [
+          "Built a Markdown-first academic knowledge platform that separates study content from the application rendering engine.",
+          "Implemented dynamic local search, subject/unit navigation, syntax highlighting, and a study-focused interface.",
+          "Designed the content structure and documentation to be easily consumed and extended by AI agents.",
+          "Created structured project documentation covering architecture decisions, AI context, content guidelines, contribution workflows, and deployment.",
+          "Deployed the static platform through GitHub Pages with automated GitHub Actions workflows.",
+          "Planned: Pro version with backend capabilities and authentication (implementation details not yet finalized)."
+        ]
+      },
+      {
+        "id": "proj-4",
+        "title": "VendorFlow",
+        "skills": "Java, Spring Boot, REST APIs, PostgreSQL, OpenAPI",
+        "start": "",
+        "end": "In development",
+        "bullets": [
+          "Designed the platform around a modular Spring Boot backend architecture.",
+          "Separated core functionality into product, marketplace, publishing, and inventory-oriented modules.",
+          "Designed the system to support product management and publishing workflows across multiple marketplaces.",
+          "Focused on modularity and extensibility to support additional marketplace integrations."
+        ]
+      },
+      {
+        "id": "proj-5",
+        "title": "Smart Redirect",
+        "skills": "HTML, CSS, JavaScript, Browser APIs, localStorage",
+        "start": "",
+        "end": "Completed",
+        "bullets": [
+          "Implemented device detection for desktop, Android, and iOS environments.",
+          "Built configurable redirect targets for web, Android, and iOS destinations.",
+          "Implemented a countdown-based redirect experience with device-specific routing.",
+          "Created a browser-based settings interface for configuring redirect destinations and generating shareable links.",
+          "Used localStorage for lightweight client-side configuration without requiring a backend."
+        ]
+      },
+      {
+        "id": "proj-6",
+        "title": "Internal PlayStore",
+        "skills": "React, JavaScript, GitHub Pages, GitHub Actions",
+        "start": "",
+        "end": "Active",
+        "bullets": [
+          "Built a Play Store-style interface for organizing and accessing internal applications and tools.",
+          "Implemented application-specific hash routes for individual internal demos and tools.",
+          "Configured automated deployment through GitHub Actions and GitHub Pages.",
+          "Created a lightweight static distribution platform without requiring a backend."
+        ]
+      }
+    ],
+    "skills": [
+      { "id": "skill-1", "category": "Programming", "items": "Java, JavaScript, TypeScript, SQL" },
+      { "id": "skill-2", "category": "Backend", "items": "Spring Boot, REST APIs, Microservices" },
+      { "id": "skill-3", "category": "Frontend", "items": "React, TypeScript" },
+      { "id": "skill-4", "category": "Database", "items": "PostgreSQL, JPA, Hibernate" },
+      { "id": "skill-5", "category": "Cloud & Services", "items": "AWS S3, AWS Cognito, Azure Blob Storage, Azure Data Factory, Third-Party API Integration" },
+      { "id": "skill-6", "category": "Testing", "items": "JaCoCo, Playwright, Unit Testing, UI Testing" },
+      { "id": "skill-7", "category": "Development", "items": "Git, GitHub, Bitbucket, Pull/Merge Requests, Code Reviews" },
+      { "id": "skill-8", "category": "Engineering", "items": "Debugging, Production Support, API Design, Data Modelling, Concurrency, Refactoring, Design Patterns" },
+      { "id": "skill-9", "category": "Methodologies", "items": "Agile, Scrum, Jira" },
+      { "id": "skill-10", "category": "Languages Spoken", "items": "English (Professional), Hindi (Professional), Marathi (Professional)" }
+    ]
+  }
+]
