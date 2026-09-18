@@ -21,19 +21,56 @@ function renderField(real, placeholderVal, ghost) {
   return '';
 }
 
+// Turns any bare http(s) URL inside plain text into a clickable link,
+// escaping everything else. Trailing punctuation (periods, commas, closing
+// parens) is kept outside the <a> since it's almost always sentence
+// punctuation rather than part of the URL.
+function linkifyText(text) {
+  const raw = String(text ?? '');
+  return raw
+    .split(/(https?:\/\/[^\s]+)/g)
+    .map((segment) => {
+      if (!/^https?:\/\//i.test(segment)) return escapeHtml(segment);
+      const trailing = segment.match(/[.,;:)]+$/)?.[0] || '';
+      const url = trailing ? segment.slice(0, -trailing.length) : segment;
+      return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>${escapeHtml(trailing)}`;
+    })
+    .join('');
+}
+
 function renderBullets(bullets, ghostCls = '') {
   const items = (bullets || []).filter((b) => b && b.trim());
   if (!items.length) return '';
   const cls = ghostCls ? ` class="${ghostCls}"` : '';
-  return `<ul${cls}>${items.map((b) => `<li>${escapeHtml(b)}</li>`).join('')}</ul>`;
+  return `<ul${cls}>${items.map((b) => `<li>${linkifyText(b)}</li>`).join('')}</ul>`;
+}
+
+// linkedin/website are stored without a protocol (e.g. "linkedin.com/in/x"),
+// so the href needs one added to actually navigate anywhere.
+function normalizeUrl(value) {
+  return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+}
+
+function contactLink(href, label) {
+  return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`;
 }
 
 function renderContactLine(personal, placeholderPersonal, ghost) {
   if (!ghost) {
-    const parts = [personal.phone, personal.email, personal.linkedin, personal.website].filter(
-      (p) => p && p.trim()
-    );
-    return escapeHtml(parts.join(' | '));
+    const parts = [];
+    if (personal.phone?.trim()) {
+      parts.push(contactLink(`tel:${personal.phone.replace(/[^\d+]/g, '')}`, personal.phone));
+    }
+    if (personal.email?.trim()) {
+      parts.push(contactLink(`mailto:${personal.email}`, personal.email));
+    }
+    if (personal.linkedin?.trim()) {
+      parts.push(contactLink(normalizeUrl(personal.linkedin), personal.linkedin));
+    }
+    if (personal.website?.trim()) {
+      parts.push(contactLink(normalizeUrl(personal.website), personal.website));
+    }
+    return parts.join(' | ');
   }
   return ['phone', 'email', 'linkedin', 'website']
     .map((key) => renderField(personal[key], placeholderPersonal[key], true))

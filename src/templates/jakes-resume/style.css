@@ -75,6 +75,13 @@
   opacity: 0.42;
 }
 
+.jakes-resume a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: #94a3b8;
+  text-underline-offset: 2px;
+}
+
 @media print {
   .jakes-resume {
     width: 210mm;
