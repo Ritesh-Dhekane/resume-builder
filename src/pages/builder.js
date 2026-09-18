@@ -10,6 +10,7 @@ import {
 } from '../state/resumeSchema.js';
 import { downloadAsImage } from '../lib/exportImage.js';
 import { downloadAsPdf, isProEnabled } from '../lib/exportPdf.js';
+import { downloadAsPdfSuperPremium } from '../lib/exportPdfVector.js';
 import { saveDraft, loadDraft, appendLocalHistory, downloadJson } from '../lib/storage.js';
 import { saveResumeToHistory, fetchHistory } from '../lib/api.js';
 import { paginate } from '../lib/paginate.js';
@@ -209,9 +210,9 @@ export async function mount(container, query) {
               Premium
               <small>Adds clickable links on top of the snapshot. Coming soon.</small>
             </button>
-            <button type="button" class="pdf-menu-item" id="pdf-opt-super" disabled title="A real text-based PDF: selectable and searchable text, clickable links, much smaller file size. Coming soon.">
+            <button type="button" class="pdf-menu-item" id="pdf-opt-super" title="A real text-based PDF: selectable and searchable text, clickable links, much smaller file size than the snapshot export.">
               Super Premium
-              <small>Real text-based PDF — selectable/searchable text, clickable links, smaller file. Coming soon.</small>
+              <small>Real text-based PDF — selectable/searchable text, clickable links, smaller file.</small>
             </button>
           </div>
         </div>
@@ -238,6 +239,7 @@ export async function mount(container, query) {
   const btnPdfTrigger = container.querySelector('#btn-pdf-trigger');
   const pdfMenu = container.querySelector('#pdf-menu');
   const pdfOptStandard = container.querySelector('#pdf-opt-standard');
+  const pdfOptSuper = container.querySelector('#pdf-opt-super');
   const btnSave = container.querySelector('#btn-save');
 
   function closePdfMenu() {
@@ -355,9 +357,17 @@ export async function mount(container, query) {
         downloadAsPdf(Array.from(previewContent.children), filenameFor(resume, 'pdf'))
       );
     });
+    // No withRealRenderOnly needed here — this draws straight from `resume`
+    // data via jsPDF's own text API, it never touches the preview DOM.
+    pdfOptSuper.addEventListener('click', () => {
+      closePdfMenu();
+      downloadAsPdfSuperPremium(resume, filenameFor(resume, 'pdf'));
+    });
   } else {
     pdfOptStandard.disabled = true;
     pdfOptStandard.title = 'PDF export is a pro feature. Set VITE_PRO_ENABLED=true in .env to enable it locally.';
+    pdfOptSuper.disabled = true;
+    pdfOptSuper.title = 'PDF export is a pro feature. Set VITE_PRO_ENABLED=true in .env to enable it locally.';
   }
 
   function renderPreview() {
