@@ -21,7 +21,7 @@ const PAGE_HEIGHT_MM = 297;
 const PAGE_VERTICAL_PADDING_MM = 32; // 16mm top + 16mm bottom
 
 function filenameFor(resume, ext) {
-  const base = (resume.personal.name || 'resume').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const base = (resume.personal.name || 'resume').trim().replace(/[^a-zA-Z0-9]+/g, '_');
   return `${base || 'resume'}.${ext}`;
 }
 
