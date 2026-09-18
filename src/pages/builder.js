@@ -197,8 +197,24 @@ export async function mount(container, query) {
       <h1 class="page-title">Builder</h1>
       <p class="page-subtitle">Template: ${esc(template.name)}</p>
       <div class="actions">
-        <button type="button" class="btn" id="btn-image">Download as Image</button>
-        <button type="button" class="btn btn-primary" id="btn-pdf">Download as PDF</button>
+        <button type="button" class="btn" id="btn-image" title="Downloads a single continuous image of your resume (not split into pages).">Download as Image</button>
+        <div class="pdf-menu-wrap" id="pdf-menu-wrap">
+          <button type="button" class="btn btn-primary" id="btn-pdf-trigger" aria-haspopup="true" aria-expanded="false">Download as PDF &#9662;</button>
+          <div class="pdf-menu" id="pdf-menu" hidden>
+            <button type="button" class="pdf-menu-item" id="pdf-opt-standard" title="Pixel-perfect snapshot of exactly what's on screen. Not searchable, and links aren't clickable.">
+              Standard
+              <small>Pixel-perfect snapshot of what's on screen. Not searchable, links aren't clickable.</small>
+            </button>
+            <button type="button" class="pdf-menu-item" id="pdf-opt-premium" disabled title="Same snapshot, with clickable links (email, LinkedIn, project links) layered on top. Coming soon.">
+              Premium
+              <small>Adds clickable links on top of the snapshot. Coming soon.</small>
+            </button>
+            <button type="button" class="pdf-menu-item" id="pdf-opt-super" disabled title="A real text-based PDF: selectable and searchable text, clickable links, much smaller file size. Coming soon.">
+              Super Premium
+              <small>Real text-based PDF — selectable/searchable text, clickable links, smaller file. Coming soon.</small>
+            </button>
+          </div>
+        </div>
         <button type="button" class="btn" id="btn-save">Save</button>
       </div>
       <div class="grid builder-grid">
@@ -218,8 +234,40 @@ export async function mount(container, query) {
   const previewScaleOuter = container.querySelector('#preview-scale-outer');
   const previewContent = container.querySelector('#preview-content');
   const btnImage = container.querySelector('#btn-image');
-  const btnPdf = container.querySelector('#btn-pdf');
+  const pdfMenuWrap = container.querySelector('#pdf-menu-wrap');
+  const btnPdfTrigger = container.querySelector('#btn-pdf-trigger');
+  const pdfMenu = container.querySelector('#pdf-menu');
+  const pdfOptStandard = container.querySelector('#pdf-opt-standard');
   const btnSave = container.querySelector('#btn-save');
+
+  function closePdfMenu() {
+    pdfMenu.hidden = true;
+    btnPdfTrigger.setAttribute('aria-expanded', 'false');
+  }
+
+  btnPdfTrigger.addEventListener('click', (event) => {
+    event.stopPropagation();
+    const willOpen = pdfMenu.hidden;
+    pdfMenu.hidden = !willOpen;
+    btnPdfTrigger.setAttribute('aria-expanded', String(willOpen));
+  });
+
+  function onDocumentClick(event) {
+    if (!pdfMenuWrap.contains(event.target)) closePdfMenu();
+  }
+  function onDocumentKeydown(event) {
+    if (event.key === 'Escape') closePdfMenu();
+  }
+  document.addEventListener('click', onDocumentClick);
+  document.addEventListener('keydown', onDocumentKeydown);
+  window.addEventListener(
+    'hashchange',
+    () => {
+      document.removeEventListener('click', onDocumentClick);
+      document.removeEventListener('keydown', onDocumentKeydown);
+    },
+    { once: true }
+  );
 
   // The live preview scales to fill its column (up or down) instead of
   // staying pinned at the resume's true 210mm width, so the column doesn't
@@ -301,14 +349,15 @@ export async function mount(container, query) {
   });
 
   if (isProEnabled) {
-    btnPdf.addEventListener('click', () => {
+    pdfOptStandard.addEventListener('click', () => {
+      closePdfMenu();
       withRealRenderOnly(renderPlainPaginated, () =>
         downloadAsPdf(Array.from(previewContent.children), filenameFor(resume, 'pdf'))
       );
     });
   } else {
-    btnPdf.disabled = true;
-    btnPdf.title = 'PDF export is a pro feature. Set VITE_PRO_ENABLED=true in .env to enable it locally.';
+    pdfOptStandard.disabled = true;
+    pdfOptStandard.title = 'PDF export is a pro feature. Set VITE_PRO_ENABLED=true in .env to enable it locally.';
   }
 
   function renderPreview() {

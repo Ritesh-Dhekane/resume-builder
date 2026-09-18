@@ -287,6 +287,55 @@ h1.page-title {
   font-size: 16px;
 }
 
+.pdf-menu-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.pdf-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 20;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+  min-width: 260px;
+  padding: 6px;
+}
+
+.pdf-menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--ink);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.pdf-menu-item:hover:not(:disabled) {
+  background: var(--bg);
+}
+
+.pdf-menu-item:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pdf-menu-item small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+
 .preview-modal-body {
   overflow: auto;
   max-height: 80vh;
