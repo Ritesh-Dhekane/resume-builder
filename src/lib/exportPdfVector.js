@@ -1,5 +1,3 @@
-import { isProEnabled } from './exportPdf.js';
-
 // A from-scratch vector renderer for the Jake's Resume template, built
 // straight from resume data using jsPDF's own text/line/rect primitives
 // instead of html2canvas. Trades pixel-perfect fidelity with the on-screen
@@ -395,10 +393,9 @@ function placeSection(doc, cursor, headingText, contentHeight) {
   drawSectionHeading(doc, cursor, headingText);
 }
 
+// Doesn't gate on isProEnabled itself — callers may also unlock this via a
+// promo code, so authorization is entirely the caller's responsibility.
 export async function downloadAsPdfSuperPremium(resume, filename = 'resume.pdf') {
-  if (!isProEnabled) {
-    throw new Error('PDF export is a pro feature (set VITE_PRO_ENABLED=true to enable).');
-  }
   const { jsPDF } = await import('jspdf');
   const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
   const cursor = createCursor();

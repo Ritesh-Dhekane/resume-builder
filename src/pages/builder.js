@@ -9,7 +9,7 @@ import {
   uid,
 } from '../state/resumeSchema.js';
 import { downloadAsImage } from '../lib/exportImage.js';
-import { downloadAsPdf, isProEnabled } from '../lib/exportPdf.js';
+import { downloadAsPdf, downloadAsPdfPremium, isProEnabled } from '../lib/exportPdf.js';
 import { downloadAsPdfSuperPremium } from '../lib/exportPdfVector.js';
 import { saveDraft, loadDraft, appendLocalHistory, downloadJson } from '../lib/storage.js';
 import { saveResumeToHistory, fetchHistory } from '../lib/api.js';
@@ -32,6 +32,77 @@ const ROW_FACTORIES = {
   projects: createEmptyProject,
   skills: createEmptySkillGroup,
 };
+
+// Client-side only — anyone could view-source and find these, same
+// "deterrence, not real security" tradeoff as the archive password (see
+// vite.config.js). Good enough for handing out to specific people, not a
+// real paywall.
+const PROMO_CODES = ['GAURI100', 'RIT50', 'KNOX100', 'TEMP10'];
+const WHATSAPP_NUMBER = '919322527567';
+const WHATSAPP_MESSAGE = "Hi, I'd like a promo code for Resume Builder.";
+
+// Shown when a premium PDF tier is clicked without VITE_PRO_ENABLED set —
+// lets someone unlock it with a promo code instead of just hitting a dead
+// disabled button. On a correct code, `onUnlock` runs the export the user
+// originally asked for.
+function openPromoModal(tierLabel, onUnlock) {
+  const backdrop = document.createElement('div');
+  backdrop.className = 'preview-modal-backdrop';
+  const waHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+  backdrop.innerHTML = `
+    <div class="preview-modal" style="max-width:380px;">
+      <div class="preview-modal-header">
+        <h3>Unlock ${esc(tierLabel)}</h3>
+        <button type="button" class="btn" id="promo-close-btn">Close</button>
+      </div>
+      <div class="field">
+        <label>Promo code</label>
+        <input type="text" id="promo-input" autofocus placeholder="Enter code" />
+      </div>
+      <div id="promo-error" style="display:none;">
+        <p style="color:#b91c1c;font-size:13px;margin:8px 0 4px;">Invalid code.</p>
+        <p style="font-size:13px;margin:0 0 8px;">Please contact Ritesh: 9322527567</p>
+        <a class="btn" href="${waHref}" target="_blank" rel="noopener noreferrer">Message on WhatsApp</a>
+      </div>
+      <div class="actions" style="margin-top:12px;">
+        <button type="button" class="btn btn-primary" id="promo-submit-btn">Unlock &amp; Download</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(backdrop);
+
+  const input = backdrop.querySelector('#promo-input');
+  const errorBox = backdrop.querySelector('#promo-error');
+
+  function close() {
+    backdrop.remove();
+    document.removeEventListener('keydown', onKeydown);
+  }
+  function onKeydown(event) {
+    if (event.key === 'Escape') close();
+  }
+  backdrop.addEventListener('click', (event) => {
+    if (event.target === backdrop) close();
+  });
+  backdrop.querySelector('#promo-close-btn').addEventListener('click', close);
+  document.addEventListener('keydown', onKeydown);
+
+  function attempt() {
+    const code = input.value.trim().toUpperCase();
+    if (PROMO_CODES.includes(code)) {
+      close();
+      onUnlock();
+    } else {
+      errorBox.style.display = 'block';
+      input.value = '';
+      input.focus();
+    }
+  }
+  backdrop.querySelector('#promo-submit-btn').addEventListener('click', attempt);
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') attempt();
+  });
+}
 
 function esc(value) {
   return String(value ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
@@ -206,9 +277,9 @@ export async function mount(container, query) {
               Standard
               <small>Pixel-perfect snapshot of what's on screen. Not searchable, links aren't clickable.</small>
             </button>
-            <button type="button" class="pdf-menu-item" id="pdf-opt-premium" disabled title="Same snapshot, with clickable links (email, LinkedIn, project links) layered on top. Coming soon.">
+            <button type="button" class="pdf-menu-item" id="pdf-opt-premium" title="Same snapshot as Standard, with clickable links (email, LinkedIn, project links) layered on top.">
               Premium
-              <small>Adds clickable links on top of the snapshot. Coming soon.</small>
+              <small>Adds clickable links on top of the snapshot.</small>
             </button>
             <button type="button" class="pdf-menu-item" id="pdf-opt-super" title="A real text-based PDF: selectable and searchable text, clickable links, much smaller file size than the snapshot export.">
               Super Premium
@@ -239,8 +310,25 @@ export async function mount(container, query) {
   const btnPdfTrigger = container.querySelector('#btn-pdf-trigger');
   const pdfMenu = container.querySelector('#pdf-menu');
   const pdfOptStandard = container.querySelector('#pdf-opt-standard');
+  const pdfOptPremium = container.querySelector('#pdf-opt-premium');
   const pdfOptSuper = container.querySelector('#pdf-opt-super');
   const btnSave = container.querySelector('#btn-save');
+  let promoUnlocked = false;
+
+  // Standard stays hard-gated by isProEnabled (no promo path). Premium/Super
+  // Premium fall back to a promo-code unlock when isProEnabled is off —
+  // otherwise they'd just be permanently dead on the deployed site, which
+  // has no VITE_PRO_ENABLED.
+  function runPremiumExport(tierLabel, runExport) {
+    if (isProEnabled || promoUnlocked) {
+      runExport();
+      return;
+    }
+    openPromoModal(tierLabel, () => {
+      promoUnlocked = true;
+      runExport();
+    });
+  }
 
   function closePdfMenu() {
     pdfMenu.hidden = true;
@@ -357,18 +445,29 @@ export async function mount(container, query) {
         downloadAsPdf(Array.from(previewContent.children), filenameFor(resume, 'pdf'))
       );
     });
-    // No withRealRenderOnly needed here — this draws straight from `resume`
-    // data via jsPDF's own text API, it never touches the preview DOM.
-    pdfOptSuper.addEventListener('click', () => {
-      closePdfMenu();
-      downloadAsPdfSuperPremium(resume, filenameFor(resume, 'pdf'));
-    });
   } else {
     pdfOptStandard.disabled = true;
     pdfOptStandard.title = 'PDF export is a pro feature. Set VITE_PRO_ENABLED=true in .env to enable it locally.';
-    pdfOptSuper.disabled = true;
-    pdfOptSuper.title = 'PDF export is a pro feature. Set VITE_PRO_ENABLED=true in .env to enable it locally.';
+    const promoHint = ' Click to unlock with a promo code.';
+    pdfOptPremium.title += promoHint;
+    pdfOptSuper.title += promoHint;
   }
+
+  pdfOptPremium.addEventListener('click', () => {
+    closePdfMenu();
+    runPremiumExport('Premium', () =>
+      withRealRenderOnly(renderPlainPaginated, () =>
+        downloadAsPdfPremium(Array.from(previewContent.children), filenameFor(resume, 'pdf'))
+      )
+    );
+  });
+
+  // No withRealRenderOnly needed here — this draws straight from `resume`
+  // data via jsPDF's own text API, it never touches the preview DOM.
+  pdfOptSuper.addEventListener('click', () => {
+    closePdfMenu();
+    runPremiumExport('Super Premium', () => downloadAsPdfSuperPremium(resume, filenameFor(resume, 'pdf')));
+  });
 
   function renderPreview() {
     // Render once, unscaled, purely to measure natural section/entry heights
