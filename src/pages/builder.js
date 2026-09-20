@@ -37,7 +37,7 @@ const ROW_FACTORIES = {
 // "deterrence, not real security" tradeoff as the archive password (see
 // vite.config.js). Good enough for handing out to specific people, not a
 // real paywall.
-const PROMO_CODES = ['GAURI100', 'RIT100', 'KNOX100', 'TEMP10'];
+const PROMO_CODES = ['GAURI100', 'RIT100', 'KNOX100', 'TEMP10','PORNIMA100'];
 const WHATSAPP_NUMBER = '919322527567';
 const WHATSAPP_MESSAGE = "Hi, I'd like a promo code for Resume Builder.";
 
