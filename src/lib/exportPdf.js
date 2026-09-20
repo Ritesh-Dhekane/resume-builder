@@ -9,10 +9,10 @@ const A4_HEIGHT_MM = 297;
 // and renders each as its own full PDF page — rather than handing html2pdf.js
 // one tall element and letting its automatic canvas-splitting decide where
 // pages break, which wouldn't reliably match what was just shown on screen.
+//
+// Always available — Standard is the free tier, unlike downloadAsPdfPremium
+// and downloadAsPdfSuperPremium which need isProEnabled or a promo code.
 export async function downloadAsPdf(pageElements, filename = 'resume.pdf') {
-  if (!isProEnabled) {
-    throw new Error('PDF export is a pro feature (set VITE_PRO_ENABLED=true to enable).');
-  }
   const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
     import('html2canvas'),
     import('jspdf'),

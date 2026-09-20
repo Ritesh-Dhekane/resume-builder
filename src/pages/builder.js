@@ -59,6 +59,10 @@ function openPromoModal(tierLabel, onUnlock) {
         <label>Promo code</label>
         <input type="text" id="promo-input" autofocus placeholder="Enter code" />
       </div>
+      <p style="font-size:12px;color:var(--muted);margin:-4px 0 12px;">
+        Don't have a promo code?
+        <a href="${waHref}" target="_blank" rel="noopener noreferrer">WhatsApp Ritesh</a> at 9322527567.
+      </p>
       <div id="promo-error" style="display:none;">
         <p style="color:#b91c1c;font-size:13px;margin:8px 0 4px;">Invalid code.</p>
         <p style="font-size:13px;margin:0 0 8px;">Please contact Ritesh: 9322527567</p>
@@ -438,16 +442,15 @@ export async function mount(container, query) {
     );
   });
 
-  if (isProEnabled) {
-    pdfOptStandard.addEventListener('click', () => {
-      closePdfMenu();
-      withRealRenderOnly(renderPlainPaginated, () =>
-        downloadAsPdf(Array.from(previewContent.children), filenameFor(resume, 'pdf'))
-      );
-    });
-  } else {
-    pdfOptStandard.disabled = true;
-    pdfOptStandard.title = 'PDF export is a pro feature. Set VITE_PRO_ENABLED=true in .env to enable it locally.';
+  // Standard is the free tier — always available, no isProEnabled/promo gate.
+  pdfOptStandard.addEventListener('click', () => {
+    closePdfMenu();
+    withRealRenderOnly(renderPlainPaginated, () =>
+      downloadAsPdf(Array.from(previewContent.children), filenameFor(resume, 'pdf'))
+    );
+  });
+
+  if (!isProEnabled) {
     const promoHint = ' Click to unlock with a promo code.';
     pdfOptPremium.title += promoHint;
     pdfOptSuper.title += promoHint;
