@@ -28,5 +28,15 @@ Build order for the resume-builder app. See the approved plan for full context. 
 - [x] TASK-022: feat: show/hide toggle on the archive password field
 - [x] TASK-023: feat: paginate the builder's live preview into real A4 pages
 - [x] TASK-024: feat: make the exported PDF match the on-screen pages exactly
+- [x] TASK-025: feat: clickable contact info and bullet URLs in Jake's Resume template (9e0cbd6)
+- [x] TASK-026: fix: preserve name casing and use underscores in download filenames (380c11c)
+- [x] TASK-027: chore: add trimmed 2-page resume entry with project links to history (1548387)
+- [x] TASK-028: feat: replace PDF button row with a dropdown menu — Standard/Premium/Super Premium (c614d03)
+- [x] TASK-029: feat: Super Premium vector PDF export with real text and clickable links (4d751d1)
+- [x] TASK-030: feat: Premium PDF export and promo-code unlock for premium tiers (352131d)
+- [x] TASK-031: feat: make Standard PDF export always available, add WhatsApp hint to promo modal (a57d5f8)
+- [x] TASK-032: chore: promo code list updates (96a6063, 83d99e7, 552c113, e319a3f)
 
 Note: TASK-011/TASK-012 originally targeted `data/history.json` and `gallery/manifest.json` at the repo root; both moved under `public/` during TASK-014 because Vite only ships `public/` into the production build.
+
+Note: TASK-025..032 were built in a separate session on another machine (commits 9e0cbd6..e319a3f), so they don't carry the `TASK-XXX:` commit-message prefix — that convention lives in this machine's local memory, which that session didn't have. Logged here after the fact for a complete task history; the original commit messages were left untouched (see hashes above), not rewritten.
