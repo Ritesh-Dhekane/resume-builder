@@ -42,7 +42,3 @@ Set the password:
 `.github/workflows/deploy.yml` builds and publishes `dist/` to GitHub Pages on every push to `main`. Requires:
 1. Pages enabled for this repo (Settings → Pages → Source: GitHub Actions).
 2. Repo secret `ADMIN_PASSWORD` set (Settings → Secrets and variables → Actions).
-
-## Task tracking
-
-See `tasks.md` for the build breakdown (`TASK-001`, `TASK-002`, ...) and the commit convention used in this repo's history.
