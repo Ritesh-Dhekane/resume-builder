@@ -42,3 +42,7 @@ Set the password locally in `.env.local` (gitignored): `VITE_ADMIN_PASSWORD=your
 
 `.github/workflows/deploy.yml` builds and publishes `dist/` to GitHub Pages on every push to `main`. Requires:
 1. Pages enabled for this repo (Settings → Pages → Source: GitHub Actions).
+
+## License
+
+[MIT](LICENSE) © 2026 Ritesh Dhekane
