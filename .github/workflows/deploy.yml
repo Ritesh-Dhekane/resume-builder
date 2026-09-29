@@ -27,13 +27,8 @@ jobs:
 
       - run: npm ci
 
-      - run: node scripts/generate-gallery-manifest.js
-
       - run: npm run build
         env:
-          # Only the SHA-256 hash of this ever reaches the client bundle
-          # (see vite.config.js). Set as a repo secret, never committed.
-          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
           # Public deploy defaults to the free tier (Download as Image only).
           VITE_PRO_ENABLED: 'false'
 
