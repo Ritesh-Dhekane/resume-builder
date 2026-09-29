@@ -23,15 +23,16 @@ Visit `http://localhost:5173` (or the port Vite prints).
 
 - **Save** in the builder POSTs to a dev-only endpoint that appends the resume to `public/data/history.json` with a timestamp — a running history of every version you've saved, tagged with the target role/JD if you filled those in. Only works under `npm run dev`; on the deployed site, Save falls back to a browser-local copy + JSON download.
 - **Uploaded PDFs**: drop old resume PDFs into `public/gallery/`, then run `npm run gallery:manifest` (or use the dev-only upload endpoint from the archive UI). These are your own reference copies — not linked from the public pages.
-- **`/archive`** (password-gated, not linked from the public pages) shows both: Saved Drafts (with an "Open in builder" link to reopen and tweak a past version for a different job) and Uploaded PDFs.
+- **`/archive`** (password-gated) shows both: Saved Drafts (with an "Open in builder" link to reopen and tweak a past version for a different job) and Uploaded PDFs.
+- **All of this is local only.** Production builds leave out `data/`, `gallery/` and the `/archive` page entirely (see `excludePersonalData` in `vite.config.js`), so the deployed site never serves your saved resumes or PDFs.
 
 ## Password gate — read this before relying on it
 
-`/archive` is protected by a password whose **hash** (not the plaintext) is baked into the built JS bundle at build time (`vite.config.js`, `src/pages/auth.js`). This is **deterrence, not real security**: the repo and the deployed GitHub Pages site are both public, so `public/data/history.json` and `public/gallery/*.pdf` are directly fetchable by anyone who has (or guesses) the URL, regardless of whether they pass the password prompt. If you need real access control, make the repo private and use a hosting setup that actually restricts access to it (private GitHub Pages requires GitHub Pro/Team/Enterprise; Netlify has its own private-site options).
+`/archive` only exists under `npm run dev`. It's protected by a password whose **hash** (not the plaintext) is baked into the dev bundle (`vite.config.js`, `src/pages/auth.js`) — deterrence against someone at your machine, not real security.
 
-Set the password:
-- **Locally**: `.env.local` (gitignored) → `VITE_ADMIN_PASSWORD=yourpassword`
-- **In CI**: repo secret `ADMIN_PASSWORD` (see `.github/workflows/deploy.yml`) — never committed.
+Note: the repo is public, so `public/data/history.json` and `public/gallery/` are still readable on GitHub itself (including their git history). Keeping them off the deployed site doesn't change that; making the repo private would.
+
+Set the password locally in `.env.local` (gitignored): `VITE_ADMIN_PASSWORD=yourpassword`.
 
 ## Pro flag
 
@@ -41,4 +42,3 @@ Set the password:
 
 `.github/workflows/deploy.yml` builds and publishes `dist/` to GitHub Pages on every push to `main`. Requires:
 1. Pages enabled for this repo (Settings → Pages → Source: GitHub Actions).
-2. Repo secret `ADMIN_PASSWORD` set (Settings → Secrets and variables → Actions).
