@@ -38,7 +38,7 @@ const ROW_FACTORIES = {
 // "deterrence, not real security" tradeoff as the archive password (see
 // vite.config.js). Good enough for handing out to specific people, not a
 // real paywall.
-const PROMO_CODES = ['GAURI100', 'RIT100', 'KNOX100', 'TEMP10','PORNIMA100','DEVI100','ABHI100','CHIMI100'];
+const PROMO_CODES = ['GAURI100', 'RIT100', 'KNOX100', 'TEMP10','PORNIMA100','DEVI100','ABHI100','CHIMI100','LNKD100'];
 const WHATSAPP_NUMBER = '919322527567';
 const WHATSAPP_MESSAGE = "Hi, I'd like a promo code for Resume Builder.";
 
@@ -60,9 +60,14 @@ function openPromoModal(tierLabel, onUnlock) {
         <label>Promo code</label>
         <input type="text" id="promo-input" autofocus placeholder="Enter code" />
       </div>
+      <!--
       <p style="font-size:12px;color:var(--muted);margin:-4px 0 12px;">
         Don't have a promo code?
         <a href="${waHref}" target="_blank" rel="noopener noreferrer">WhatsApp Ritesh</a> at 9322527567.
+      </p>
+      -->
+      <p style="font-size:12px;color:var(--muted);margin:-4px 0 12px;">
+        Use promo code <strong>LNKD100</strong> to unlock the premium features.
       </p>
       <div id="promo-error" style="display:none;">
         <p style="color:#b91c1c;font-size:13px;margin:8px 0 4px;">Invalid code.</p>
