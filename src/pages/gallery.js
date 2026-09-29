@@ -1,6 +1,7 @@
 import { templates, loadTemplateStyles, MM_TO_PX } from '../templates/registry.js';
 import { createPlaceholderResume } from '../state/resumeSchema.js';
 import { navigate } from '../lib/router.js';
+import { trackEvent } from '../lib/analytics.js';
 
 function fitThumbnail(thumb, pageWidthPx) {
   const inner = thumb.querySelector('.template-thumb-inner');
@@ -66,6 +67,7 @@ function openPreviewModal(template, placeholder) {
   backdrop.querySelector('#preview-close-btn').addEventListener('click', close);
   backdrop.querySelector('#preview-use-btn').addEventListener('click', () => {
     close();
+    trackEvent('template_selected', { template_id: template.id, source: 'preview' });
     navigate(`/builder?template=${template.id}`);
   });
   document.addEventListener('keydown', onKeydown);
@@ -103,6 +105,7 @@ export function mount(container) {
       </div>
     `;
     card.querySelector('.use-template').addEventListener('click', () => {
+      trackEvent('template_selected', { template_id: template.id, source: 'card' });
       navigate(`/builder?template=${template.id}`);
     });
     card.querySelector('.preview-template').addEventListener('click', () => {

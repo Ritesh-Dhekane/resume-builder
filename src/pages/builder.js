@@ -11,6 +11,7 @@ import {
 import { downloadAsImage } from '../lib/exportImage.js';
 import { downloadAsPdf, downloadAsPdfPremium, isProEnabled } from '../lib/exportPdf.js';
 import { downloadAsPdfSuperPremium } from '../lib/exportPdfVector.js';
+import { trackEvent } from '../lib/analytics.js';
 import { saveDraft, loadDraft, appendLocalHistory, downloadJson } from '../lib/storage.js';
 import { saveResumeToHistory, fetchHistory } from '../lib/api.js';
 import { paginate } from '../lib/paginate.js';
@@ -106,6 +107,10 @@ function openPromoModal(tierLabel, onUnlock) {
   input.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') attempt();
   });
+}
+
+function tierKey(tierLabel) {
+  return tierLabel.toLowerCase().replace(/\s+/g, '_');
 }
 
 function esc(value) {
@@ -330,6 +335,7 @@ export async function mount(container, query) {
     }
     openPromoModal(tierLabel, () => {
       promoUnlocked = true;
+      trackEvent('premium_unlocked', { tier: tierKey(tierLabel) });
       runExport();
     });
   }
@@ -423,7 +429,9 @@ export async function mount(container, query) {
 
   btnImage.addEventListener('click', () => {
     withRealRenderOnly(renderPlainSinglePage, () =>
-      downloadAsImage(previewContent, filenameFor(resume, 'png'))
+      downloadAsImage(previewContent, filenameFor(resume, 'png')).then(() =>
+        trackEvent('resume_downloaded', { format: 'image' })
+      )
     );
   });
 
@@ -446,7 +454,9 @@ export async function mount(container, query) {
   pdfOptStandard.addEventListener('click', () => {
     closePdfMenu();
     withRealRenderOnly(renderPlainPaginated, () =>
-      downloadAsPdf(Array.from(previewContent.children), filenameFor(resume, 'pdf'))
+      downloadAsPdf(Array.from(previewContent.children), filenameFor(resume, 'pdf')).then(() =>
+        trackEvent('resume_downloaded', { format: 'pdf', tier: 'standard' })
+      )
     );
   });
 
@@ -460,7 +470,9 @@ export async function mount(container, query) {
     closePdfMenu();
     runPremiumExport('Premium', () =>
       withRealRenderOnly(renderPlainPaginated, () =>
-        downloadAsPdfPremium(Array.from(previewContent.children), filenameFor(resume, 'pdf'))
+        downloadAsPdfPremium(Array.from(previewContent.children), filenameFor(resume, 'pdf')).then(
+          () => trackEvent('resume_downloaded', { format: 'pdf', tier: 'premium' })
+        )
       )
     );
   });
@@ -469,7 +481,11 @@ export async function mount(container, query) {
   // data via jsPDF's own text API, it never touches the preview DOM.
   pdfOptSuper.addEventListener('click', () => {
     closePdfMenu();
-    runPremiumExport('Super Premium', () => downloadAsPdfSuperPremium(resume, filenameFor(resume, 'pdf')));
+    runPremiumExport('Super Premium', () =>
+      downloadAsPdfSuperPremium(resume, filenameFor(resume, 'pdf')).then(() =>
+        trackEvent('resume_downloaded', { format: 'pdf', tier: 'super_premium' })
+      )
+    );
   });
 
   function renderPreview() {

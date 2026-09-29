@@ -1,10 +1,17 @@
 import { getPath, getQuery } from './lib/router.js';
+import { initAnalytics, trackPageView } from './lib/analytics.js';
 import { mount as mountGallery } from './pages/gallery.js';
 import { mount as mountBuilder } from './pages/builder.js';
 
 const routes = {
   '/': mountGallery,
   '/builder': mountBuilder,
+};
+
+const PAGE_TITLES = {
+  '/': 'Templates',
+  '/builder': 'Builder',
+  '/archive': 'Archive',
 };
 
 // The archive (saved drafts + uploaded PDFs) is a local, dev-only workspace; it's
@@ -17,10 +24,12 @@ if (import.meta.env.DEV) {
 const app = document.getElementById('app');
 
 function render() {
-  const mountPage = routes[getPath()] || mountGallery;
+  const path = routes[getPath()] ? getPath() : '/';
   app.innerHTML = '';
-  mountPage(app, getQuery());
+  routes[path](app, getQuery());
+  trackPageView(path, PAGE_TITLES[path]);
 }
 
+initAnalytics();
 window.addEventListener('hashchange', render);
 render();
