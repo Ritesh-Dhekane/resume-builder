@@ -2,8 +2,9 @@
 // contact details, then a main column (summary, experience, projects) and a sidebar (skills as
 // tags, education).
 //
-// Structure (lib/paginate.js, "sidebar" layout): <header>, then <div class="cols"> holding
-// <main class="col-main"> and <aside class="col-side">, each a list of <section>s (<h2> + entries).
+// Structure (lib/paginate.js, "sidebar" layout): a header block (div.hd), then <div class="cols">
+// holding div.col-main and div.col-side, each a list of <section>s (<h2> + entries). Plain divs,
+// not <header>/<main>/<aside>: inside the app those would count as extra page landmarks.
 // The header and sidebar stay on page one; the main column flows across pages.
 
 import {
@@ -114,14 +115,14 @@ export function render(resume, placeholder) {
 
   return `
     <div class="tpl-twocol">
-      <header>
+      <div class="hd">
         <h1>${name}</h1>
         ${headline ? `<p class="headline">${headline}</p>` : ''}
         <p class="contact">${contact.map((c) => `<span class="item">${c}</span>`).join('')}</p>
-      </header>
+      </div>
       <div class="cols">
-        <main class="col-main">${main}</main>
-        <aside class="col-side">${side}</aside>
+        <div class="col-main">${main}</div>
+        <div class="col-side">${side}</div>
       </div>
     </div>`;
 }

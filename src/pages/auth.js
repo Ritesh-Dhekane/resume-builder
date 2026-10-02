@@ -26,16 +26,16 @@ export function renderGate(container, onUnlock) {
     <div class="topbar"><a class="brand" href="#/">Resume Builder</a></div>
     <div class="container">
       <div class="card" style="max-width:360px;margin:60px auto;">
-        <h2 style="margin-top:0;">Archive access</h2>
+        <h1 class="page-title" style="margin-top:0;">Archive access</h1>
         <p class="page-subtitle">Enter the password to view saved drafts and uploaded PDFs.</p>
         <div class="field">
           <div class="password-field">
-            <input type="password" id="gate-password" autofocus />
+            <input type="password" id="gate-password" autofocus aria-label="Password" />
             <button type="button" class="password-toggle" id="gate-toggle" aria-label="Show password">${EYE_ICON}</button>
           </div>
         </div>
         <button type="button" class="btn btn-primary" id="gate-submit">Unlock</button>
-        <p id="gate-error" style="color:#b91c1c;font-size:12px;display:none;">Incorrect password.</p>
+        <p id="gate-error" class="error-text" style="font-size:12px;display:none;">Incorrect password.</p>
       </div>
     </div>
   `;

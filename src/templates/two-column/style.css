@@ -14,7 +14,7 @@
   box-sizing: border-box;
 }
 
-.tpl-twocol header {
+.tpl-twocol .hd {
   padding-bottom: 8px;
   border-bottom: 2px solid var(--accent);
 }

@@ -2,6 +2,7 @@ import { templates, loadTemplateStyles, MM_TO_PX } from '../templates/registry.j
 import { createPlaceholderResume } from '../state/resumeSchema.js';
 import { navigate } from '../lib/router.js';
 import { trackEvent } from '../lib/analytics.js';
+import { hideModal, showModal } from '../lib/modal.js';
 
 function fitThumbnail(thumb, pageWidthPx) {
   const inner = thumb.querySelector('.template-thumb-inner');
@@ -27,9 +28,9 @@ function openPreviewModal(template, placeholder) {
   const backdrop = document.createElement('div');
   backdrop.className = 'preview-modal-backdrop';
   backdrop.innerHTML = `
-    <div class="preview-modal">
+    <div class="preview-modal" role="dialog" aria-modal="true" aria-labelledby="preview-title">
       <div class="preview-modal-header">
-        <h3>${template.name} &mdash; full preview</h3>
+        <h3 id="preview-title">${template.name} &mdash; full preview</h3>
         <div class="actions" style="margin:0;">
           <button type="button" class="btn btn-primary" id="preview-use-btn">Use this template</button>
           <button type="button" class="btn" id="preview-close-btn">Close</button>
@@ -42,7 +43,7 @@ function openPreviewModal(template, placeholder) {
       </div>
     </div>
   `;
-  document.body.appendChild(backdrop);
+  showModal(backdrop, () => close());
 
   const outer = backdrop.querySelector('#modal-scale-outer');
   const inner = backdrop.querySelector('#modal-scale-inner');
@@ -53,7 +54,7 @@ function openPreviewModal(template, placeholder) {
   window.addEventListener('resize', refit);
 
   function close() {
-    backdrop.remove();
+    hideModal(backdrop);
     window.removeEventListener('resize', refit);
     document.removeEventListener('keydown', onKeydown);
   }

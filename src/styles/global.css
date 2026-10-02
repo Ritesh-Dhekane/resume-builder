@@ -8,6 +8,7 @@
   --surface: #ffffff;
   --canvas: #f8fafc; /* behind the white resume pages */
   --field: #ffffff;
+  --danger: #b91c1c;
   color-scheme: light;
 }
 
@@ -23,6 +24,7 @@
   --surface: #1e293b;
   --canvas: #0b1220;
   --field: #0f172a;
+  --danger: #f87171;
   color-scheme: dark;
 }
 
@@ -438,4 +440,8 @@ h1.page-title {
 .theme-toggle:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+.error-text {
+  color: var(--danger);
 }

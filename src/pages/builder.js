@@ -16,6 +16,7 @@ import { saveDraft, loadDraft, appendLocalHistory, downloadJson } from '../lib/s
 import { saveResumeToHistory, fetchHistory } from '../lib/api.js';
 import { paginate } from '../lib/paginate.js';
 import { navigate } from '../lib/router.js';
+import { hideModal, showModal } from '../lib/modal.js';
 
 // A4 is 297mm tall; the template's own top + bottom padding (each template's
 // `pagePaddingMm` in templates/registry.js) eats into that on every page, so
@@ -51,13 +52,13 @@ function openPromoModal(tierLabel, onUnlock) {
   backdrop.className = 'preview-modal-backdrop';
   const waHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
   backdrop.innerHTML = `
-    <div class="preview-modal" style="max-width:380px;">
+    <div class="preview-modal" style="max-width:380px;" role="dialog" aria-modal="true" aria-labelledby="promo-title">
       <div class="preview-modal-header">
-        <h3>Unlock ${esc(tierLabel)}</h3>
+        <h3 id="promo-title">Unlock ${esc(tierLabel)}</h3>
         <button type="button" class="btn" id="promo-close-btn">Close</button>
       </div>
       <div class="field">
-        <label>Promo code</label>
+        <label for="promo-input">Promo code</label>
         <input type="text" id="promo-input" autofocus placeholder="Enter code" />
       </div>
       <!--
@@ -70,7 +71,7 @@ function openPromoModal(tierLabel, onUnlock) {
         Use promo code <strong>LNKD100</strong> to unlock the premium features.
       </p>
       <div id="promo-error" style="display:none;">
-        <p style="color:#b91c1c;font-size:13px;margin:8px 0 4px;">Invalid code.</p>
+        <p class="error-text" style="font-size:13px;margin:8px 0 4px;">Invalid code.</p>
         <p style="font-size:13px;margin:0 0 8px;">Please contact Ritesh: 9322527567</p>
         <a class="btn" href="${waHref}" target="_blank" rel="noopener noreferrer">Message on WhatsApp</a>
       </div>
@@ -79,13 +80,13 @@ function openPromoModal(tierLabel, onUnlock) {
       </div>
     </div>
   `;
-  document.body.appendChild(backdrop);
+  showModal(backdrop, () => close());
 
   const input = backdrop.querySelector('#promo-input');
   const errorBox = backdrop.querySelector('#promo-error');
 
   function close() {
-    backdrop.remove();
+    hideModal(backdrop);
     document.removeEventListener('keydown', onKeydown);
   }
   function onKeydown(event) {
@@ -133,8 +134,13 @@ function findRow(list, id) {
   return list.find((row) => row.id === id);
 }
 
+// Each label points at its input (screen readers announce the field's name). Ids only need to be
+// unique within the page, so a counter is enough.
+let nextFieldId = 1;
 function field(label, inputHtml) {
-  return `<div class="field"><label>${label}</label>${inputHtml}</div>`;
+  const id = `field-${nextFieldId++}`;
+  const control = inputHtml.replace(/^<(input|textarea|select)\b/, `<$1 id="${id}"`);
+  return `<div class="field"><label for="${id}">${label}</label>${control}</div>`;
 }
 
 function textInput(dataAttr, value) {
@@ -237,7 +243,7 @@ function renderFormHTML(resume) {
     ${personalFields(resume.personal)}
 
     <h2>Summary</h2>
-    <div class="field"><textarea data-path="summary" rows="4">${esc(resume.summary)}</textarea></div>
+    <div class="field"><textarea data-path="summary" rows="4" aria-label="Summary">${esc(resume.summary)}</textarea></div>
 
     <h2>Education</h2>
     <div id="education-list">${resume.education.map(educationRow).join('')}</div>

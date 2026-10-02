@@ -13,7 +13,7 @@
   box-sizing: border-box;
 }
 
-.tpl-bold header {
+.tpl-bold .hd {
   text-align: center;
   padding-bottom: 2px;
 }

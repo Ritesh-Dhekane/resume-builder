@@ -2,7 +2,8 @@
 // a large light name, small letter-spaced headings in a green accent with no rules, lots of white
 // space and muted dates. One column.
 //
-// Structure (lib/paginate.js): a <header>, then one <section> per part (<h2> + entries).
+// Structure (lib/paginate.js): a header block (div.hd), then one <section> per part (<h2> +
+// entries). No <header>/<main> elements: inside the app they would count as page landmarks.
 
 import {
   contactParts,
@@ -107,11 +108,11 @@ export function render(resume, placeholder) {
 
   return `
     <div class="tpl-minimal">
-      <header>
+      <div class="hd">
         <h1>${name}</h1>
         ${headline ? `<p class="headline">${headline}</p>` : ''}
         <p class="contact">${contact.join('<span class="sep">&middot;</span>')}</p>
-      </header>
+      </div>
       ${sections}
     </div>`;
 }

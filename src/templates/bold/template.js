@@ -2,7 +2,8 @@
 // headline and separators in a red accent, section titles whose first letters are red with a rule
 // running to the edge, and skills as a two-column table. One column.
 //
-// Structure (lib/paginate.js): a <header>, then one <section> per part (<h2> + entries).
+// Structure (lib/paginate.js): a header block (div.hd), then one <section> per part (<h2> +
+// entries). No <header>/<main> elements: inside the app they would count as page landmarks.
 
 import {
   contactParts,
@@ -111,11 +112,11 @@ export function render(resume, placeholder) {
 
   return `
     <div class="tpl-bold">
-      <header>
+      <div class="hd">
         <h1${useGhostName ? ' class="placeholder-text"' : ''}>${nameHtml}</h1>
         ${headline ? `<p class="headline">${headline}</p>` : ''}
         <p class="contact">${contact.join('<span class="sep">|</span>')}</p>
-      </header>
+      </div>
       ${sections}
     </div>`;
 }
