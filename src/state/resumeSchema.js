@@ -46,7 +46,9 @@ export function createEmptySkillGroup() {
   return { id: uid(), category: '', items: '' };
 }
 
-export function createPlaceholderResume(templateId) {
+// Example content for the empty builder and the gallery. `general` swaps the developer-flavoured
+// skills for ones that fit any job, and adds a headline and location (the newer templates show them).
+export function createPlaceholderResume(templateId, { general = false } = {}) {
   const resume = createEmptyResume(templateId);
   resume.meta.label = 'Placeholder';
   resume.personal = {
@@ -97,5 +99,14 @@ export function createPlaceholderResume(templateId) {
     { id: uid(), category: 'Frameworks', items: 'React, Django, Spring Boot, Flask, Angular, Ruby on Rails, Express.js' },
     { id: uid(), category: 'Developer Tools', items: 'Git, Docker, Jenkins, Visual Studio Code, PyCharm, TravisCI, Eclipse, JIRA' },
   ];
+  if (general) {
+    resume.personal.title = 'Your Role or Headline';
+    resume.personal.location = 'City, Country';
+    resume.skills = [
+      { id: uid(), category: 'Core skills', items: 'Project management, Stakeholder communication, Budgeting, Reporting' },
+      { id: uid(), category: 'Tools', items: 'Excel, PowerPoint, Salesforce, Jira, Notion' },
+      { id: uid(), category: 'Languages', items: 'English (fluent), Hindi (native)' },
+    ];
+  }
   return resume;
 }

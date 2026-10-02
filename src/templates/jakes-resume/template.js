@@ -1,59 +1,11 @@
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function isEmpty(value) {
-  return !value || !String(value).trim();
-}
-
-// Renders `real` if present; otherwise, in ghost mode, renders `placeholderVal`
-// wrapped so it can be styled as an example rather than the user's content.
-function renderField(real, placeholderVal, ghost) {
-  if (!isEmpty(real)) return escapeHtml(real);
-  if (ghost && !isEmpty(placeholderVal)) {
-    return `<span class="placeholder-text">${escapeHtml(placeholderVal)}</span>`;
-  }
-  return '';
-}
-
-// Turns any bare http(s) URL inside plain text into a clickable link,
-// escaping everything else. Trailing punctuation (periods, commas, closing
-// parens) is kept outside the <a> since it's almost always sentence
-// punctuation rather than part of the URL.
-function linkifyText(text) {
-  const raw = String(text ?? '');
-  return raw
-    .split(/(https?:\/\/[^\s]+)/g)
-    .map((segment) => {
-      if (!/^https?:\/\//i.test(segment)) return escapeHtml(segment);
-      const trailing = segment.match(/[.,;:)]+$/)?.[0] || '';
-      const url = trailing ? segment.slice(0, -trailing.length) : segment;
-      return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>${escapeHtml(trailing)}`;
-    })
-    .join('');
-}
-
-function renderBullets(bullets, ghostCls = '') {
-  const items = (bullets || []).filter((b) => b && b.trim());
-  if (!items.length) return '';
-  const cls = ghostCls ? ` class="${ghostCls}"` : '';
-  return `<ul${cls}>${items.map((b) => `<li>${linkifyText(b)}</li>`).join('')}</ul>`;
-}
-
-// linkedin/website are stored without a protocol (e.g. "linkedin.com/in/x"),
-// so the href needs one added to actually navigate anywhere.
-function normalizeUrl(value) {
-  return /^https?:\/\//i.test(value) ? value : `https://${value}`;
-}
-
-function contactLink(href, label) {
-  return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`;
-}
+import {
+  contactLink,
+  escapeHtml,
+  isEmpty,
+  normalizeUrl,
+  renderBullets,
+  renderField,
+} from '../shared.js';
 
 function renderContactLine(personal, placeholderPersonal, ghost) {
   if (!ghost) {

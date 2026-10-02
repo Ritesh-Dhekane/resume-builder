@@ -1,0 +1,9 @@
+{
+  "_help": "Which templates the app offers, in gallery order. Set \"visible\": false to hide one (it disappears from the gallery and the builder's template picker; links to it open the first visible template instead). Rebuild/redeploy after editing.",
+  "templates": [
+    {
+      "id": "jakes-resume",
+      "visible": true
+    }
+  ]
+}

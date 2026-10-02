@@ -1,4 +1,4 @@
-import { getTemplate, loadTemplateStyles, MM_TO_PX } from '../templates/registry.js';
+import { getTemplate, loadTemplateStyles, MM_TO_PX, templates } from '../templates/registry.js';
 import {
   createEmptyResume,
   createEmptyEducation,
@@ -15,12 +15,12 @@ import { trackEvent } from '../lib/analytics.js';
 import { saveDraft, loadDraft, appendLocalHistory, downloadJson } from '../lib/storage.js';
 import { saveResumeToHistory, fetchHistory } from '../lib/api.js';
 import { paginate } from '../lib/paginate.js';
+import { navigate } from '../lib/router.js';
 
-// A4 is 297mm tall; the template's own padding (jakes-resume/style.css,
-// `padding: 16mm 18mm`) eats into that on every page, so the pagination
-// budget is the page height minus top+bottom padding, not the full 297mm.
+// A4 is 297mm tall; the template's own top + bottom padding (each template's
+// `pagePaddingMm` in templates/registry.js) eats into that on every page, so
+// the pagination budget is the page height minus that padding.
 const PAGE_HEIGHT_MM = 297;
-const PAGE_VERTICAL_PADDING_MM = 32; // 16mm top + 16mm bottom
 
 function filenameFor(resume, ext) {
   const base = (resume.personal.name || 'resume').trim().replace(/[^a-zA-Z0-9]+/g, '_');
@@ -251,7 +251,7 @@ function renderFormHTML(resume) {
     <div id="projects-list">${resume.projects.map(projectRow).join('')}</div>
     ${addButton('projects', '+ Add project')}
 
-    <h2>Technical Skills</h2>
+    <h2>Skills</h2>
     <div id="skills-list">${resume.skills.map(skillRow).join('')}</div>
     ${addButton('skills', '+ Add skill group')}
   `;
@@ -273,15 +273,27 @@ export async function mount(container, query) {
       ? { ...JSON.parse(JSON.stringify(found)), id: uid(), meta: { ...found.meta, savedAt: null } }
       : createEmptyResume(template.id);
   } else {
+    // The draft follows you across templates — switching template keeps your content.
     const draft = loadDraft();
-    resume = draft && draft.templateId === template.id ? draft : createEmptyResume(template.id);
+    resume = draft ? { ...draft, templateId: template.id } : createEmptyResume(template.id);
   }
 
   container.innerHTML = `
     <div class="topbar"><a class="brand" href="#/">Resume Builder</a></div>
     <div class="container-wide">
       <h1 class="page-title">Builder</h1>
-      <p class="page-subtitle">Template: ${esc(template.name)}</p>
+      <p class="page-subtitle template-picker">
+        <label for="template-select">Template</label>
+        <select id="template-select">
+          ${templates
+            .map(
+              (t) =>
+                `<option value="${esc(t.id)}"${t.id === template.id ? ' selected' : ''}>${esc(t.name)}</option>`
+            )
+            .join('')}
+        </select>
+        <span class="template-picker-note">Your content stays when you switch.</span>
+      </p>
       <div class="actions">
         <button type="button" class="btn" id="btn-image" title="Downloads a single continuous image of your resume (not split into pages).">Download as Image</button>
         <div class="pdf-menu-wrap" id="pdf-menu-wrap">
@@ -295,9 +307,13 @@ export async function mount(container, query) {
               Premium
               <small>Adds clickable links on top of the snapshot.</small>
             </button>
-            <button type="button" class="pdf-menu-item" id="pdf-opt-super" title="A real text-based PDF: selectable and searchable text, clickable links, much smaller file size than the snapshot export.">
+            <button type="button" class="pdf-menu-item" id="pdf-opt-super" title="A real text-based PDF: selectable and searchable text, clickable links, much smaller file size than the snapshot export."${template.vectorTheme ? '' : ' disabled'}>
               Super Premium
-              <small>Real text-based PDF — selectable/searchable text, clickable links, smaller file.</small>
+              <small>${
+                template.vectorTheme
+                  ? 'Real text-based PDF — selectable/searchable text, clickable links, smaller file.'
+                  : 'Not available for this template yet — use Premium for clickable links.'
+              }</small>
             </button>
           </div>
         </div>
@@ -314,7 +330,9 @@ export async function mount(container, query) {
     </div>
   `;
 
-  const placeholder = createPlaceholderResume(template.id);
+  const placeholder = createPlaceholderResume(template.id, {
+    general: template.placeholder === 'general',
+  });
 
   const formPanel = container.querySelector('#form-panel');
   const previewScaleOuter = container.querySelector('#preview-scale-outer');
@@ -327,6 +345,12 @@ export async function mount(container, query) {
   const pdfOptPremium = container.querySelector('#pdf-opt-premium');
   const pdfOptSuper = container.querySelector('#pdf-opt-super');
   const btnSave = container.querySelector('#btn-save');
+  container.querySelector('#template-select').addEventListener('change', (event) => {
+    saveDraft(resume);
+    trackEvent('template_selected', { template_id: event.target.value, source: 'builder' });
+    const params = new URLSearchParams({ template: event.target.value });
+    navigate(`/builder?${params}`);
+  });
   let promoUnlocked = false;
 
   // Standard stays hard-gated by isProEnabled (no promo path). Premium/Super
@@ -387,7 +411,7 @@ export async function mount(container, query) {
   // fixed value (it depends on content and the loaded CSS), so it's
   // measured live and re-fit once the stylesheet actually loads.
   const pageWidthPx = template.pageWidthMm * MM_TO_PX;
-  const pageContentHeightPx = (PAGE_HEIGHT_MM - PAGE_VERTICAL_PADDING_MM) * MM_TO_PX;
+  const pageContentHeightPx = (PAGE_HEIGHT_MM - template.pagePaddingMm) * MM_TO_PX;
   const MAX_PREVIEW_SCALE = 1.6;
   // scrollHeight covers the full stack when the preview has multiple pages
   // (see renderPreview/paginate below), not just a single page's height.
@@ -428,8 +452,10 @@ export async function mount(container, query) {
   function renderPlainPaginated() {
     previewContent.innerHTML = template.render(resume);
     const measureRoot = previewContent.firstElementChild;
-    const pages = paginate(measureRoot, pageContentHeightPx);
-    previewContent.innerHTML = pages.map((html) => `<div class="jakes-resume">${html}</div>`).join('');
+    const pages = paginate(measureRoot, pageContentHeightPx, template.layout);
+    previewContent.innerHTML = pages
+      .map((html) => `<div class="${template.rootClass}">${html}</div>`)
+      .join('');
   }
 
   btnImage.addEventListener('click', () => {
@@ -485,9 +511,10 @@ export async function mount(container, query) {
   // No withRealRenderOnly needed here — this draws straight from `resume`
   // data via jsPDF's own text API, it never touches the preview DOM.
   pdfOptSuper.addEventListener('click', () => {
+    if (!template.vectorTheme) return;
     closePdfMenu();
     runPremiumExport('Super Premium', () =>
-      downloadAsPdfSuperPremium(resume, filenameFor(resume, 'pdf')).then(() =>
+      downloadAsPdfSuperPremium(resume, filenameFor(resume, 'pdf'), template.vectorTheme).then(() =>
         trackEvent('resume_downloaded', { format: 'pdf', tier: 'super_premium' })
       )
     );
@@ -501,9 +528,9 @@ export async function mount(container, query) {
     previewContent.style.width = `${pageWidthPx}px`;
     previewContent.innerHTML = template.render(resume, placeholder);
     const measureRoot = previewContent.firstElementChild;
-    const pages = paginate(measureRoot, pageContentHeightPx);
+    const pages = paginate(measureRoot, pageContentHeightPx, template.layout);
     previewContent.innerHTML = pages
-      .map((html) => `<div class="jakes-resume resume-page">${html}</div>`)
+      .map((html) => `<div class="${template.rootClass} resume-page">${html}</div>`)
       .join('');
     fitPreviewScale();
     saveDraft(resume);

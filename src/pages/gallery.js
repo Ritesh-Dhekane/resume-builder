@@ -88,7 +88,9 @@ export function mount(container) {
 
   templates.forEach((template) => {
     loadTemplateStyles(template);
-    const placeholder = createPlaceholderResume(template.id);
+    const placeholder = createPlaceholderResume(template.id, {
+      general: template.placeholder === 'general',
+    });
     const pageWidthPx = template.pageWidthMm * MM_TO_PX;
 
     const card = document.createElement('div');
