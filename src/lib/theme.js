@@ -1,9 +1,8 @@
-// Light/dark theme for the app (not the resumes — those are always white paper). The choice is
-// remembered in localStorage; until someone picks, it follows the system setting. index.html
-// applies the saved theme before first paint so the page never flashes the wrong one.
+// Light/dark theme for the app (not the resumes — those are always white paper). Light unless
+// dark was picked with the toggle; the choice is remembered in localStorage. index.html applies
+// it before first paint so the page never flashes the wrong one.
 
 const KEY = 'resume-builder:theme';
-const media = window.matchMedia('(prefers-color-scheme: dark)');
 
 function saved() {
   try {
@@ -15,7 +14,7 @@ function saved() {
 }
 
 export function currentTheme() {
-  return saved() || (media.matches ? 'dark' : 'light');
+  return saved() || 'light';
 }
 
 function apply(theme) {
@@ -31,11 +30,6 @@ function setTheme(theme) {
   }
   apply(theme);
 }
-
-// Follow the system setting while nothing has been picked.
-media.addEventListener('change', () => {
-  if (!saved()) apply(currentTheme());
-});
 
 const SUN =
   '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>';
