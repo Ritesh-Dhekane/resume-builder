@@ -2,6 +2,8 @@ import { render as renderJakesResume } from './jakes-resume/template.js';
 import jakesResumeStyleUrl from './jakes-resume/style.css?url';
 import { render as renderClassic } from './classic/template.js';
 import classicStyleUrl from './classic/style.css?url';
+import { render as renderTwoColumn } from './two-column/template.js';
+import twoColumnStyleUrl from './two-column/style.css?url';
 import { BOLD_THEME, CLASSIC_THEME, JAKES_THEME, MINIMAL_THEME } from './vectorThemes.js';
 import config from './templates.json';
 
@@ -39,6 +41,18 @@ const DEFINITIONS = {
     pagePaddingMm: 32,
     layout: 'single',
     vectorTheme: CLASSIC_THEME,
+    placeholder: 'general',
+  },
+  'two-column': {
+    name: 'Two-Column',
+    description:
+      'Modern layout with a sidebar for skills and education. Best when a person, not a screening tool, reads it first.',
+    render: renderTwoColumn,
+    styleUrl: twoColumnStyleUrl,
+    rootClass: 'tpl-twocol',
+    pagePaddingMm: 28,
+    layout: 'sidebar',
+    vectorTheme: null,
     placeholder: 'general',
   },
 };

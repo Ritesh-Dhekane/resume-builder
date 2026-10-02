@@ -8,6 +8,10 @@
     {
       "id": "classic",
       "visible": true
+    },
+    {
+      "id": "two-column",
+      "visible": true
     }
   ]
 }
