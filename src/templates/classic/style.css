@@ -1,0 +1,101 @@
+/* Classic (Harvard style). Page padding top + bottom = 32mm (registry.js pagePaddingMm). */
+.tpl-classic {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  padding: 16mm 18mm;
+  background: #ffffff;
+  color: #111111;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 12.5px;
+  line-height: 1.4;
+  box-sizing: border-box;
+}
+
+.tpl-classic h1 {
+  margin: 0;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.tpl-classic .headline {
+  margin: 2px 0 0;
+  text-align: center;
+  font-style: italic;
+  font-size: 12.5px;
+}
+
+.tpl-classic .contact {
+  margin: 4px 0 0;
+  text-align: center;
+  font-size: 11.5px;
+}
+
+.tpl-classic .contact .sep {
+  margin: 0 7px;
+}
+
+.tpl-classic section {
+  margin-top: 12px;
+}
+
+.tpl-classic h2 {
+  margin: 0 0 5px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #111111;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.tpl-classic .entry {
+  padding-top: 5px;
+}
+
+.tpl-classic .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tpl-classic .row .r {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.tpl-classic .summary {
+  margin: 4px 0 0;
+}
+
+.tpl-classic ul {
+  margin: 3px 0 0;
+  padding-left: 18px;
+}
+
+.tpl-classic li {
+  margin-bottom: 1px;
+}
+
+.tpl-classic .skill-line {
+  margin: 3px 0 0;
+}
+
+.tpl-classic .placeholder-text {
+  opacity: 0.42;
+}
+
+.tpl-classic a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media print {
+  .tpl-classic {
+    min-height: 0;
+    margin: 0;
+  }
+}

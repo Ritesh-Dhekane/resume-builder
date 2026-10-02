@@ -4,6 +4,10 @@
     {
       "id": "jakes-resume",
       "visible": true
+    },
+    {
+      "id": "classic",
+      "visible": true
     }
   ]
 }

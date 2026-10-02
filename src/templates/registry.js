@@ -1,5 +1,7 @@
 import { render as renderJakesResume } from './jakes-resume/template.js';
 import jakesResumeStyleUrl from './jakes-resume/style.css?url';
+import { render as renderClassic } from './classic/template.js';
+import classicStyleUrl from './classic/style.css?url';
 import { BOLD_THEME, CLASSIC_THEME, JAKES_THEME, MINIMAL_THEME } from './vectorThemes.js';
 import config from './templates.json';
 
@@ -26,6 +28,18 @@ const DEFINITIONS = {
     layout: 'single',
     vectorTheme: JAKES_THEME,
     placeholder: 'developer',
+  },
+  classic: {
+    name: 'Classic',
+    description:
+      'Traditional serif layout in the Harvard style. For business, finance, law and first jobs.',
+    render: renderClassic,
+    styleUrl: classicStyleUrl,
+    rootClass: 'tpl-classic',
+    pagePaddingMm: 32,
+    layout: 'single',
+    vectorTheme: CLASSIC_THEME,
+    placeholder: 'general',
   },
 };
 
