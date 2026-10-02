@@ -1,5 +1,6 @@
 import { getPath, getQuery } from './lib/router.js';
 import { initAnalytics, trackPageView } from './lib/analytics.js';
+import { addThemeToggle } from './lib/theme.js';
 import { mount as mountGallery } from './pages/gallery.js';
 import { mount as mountBuilder } from './pages/builder.js';
 
@@ -26,7 +27,9 @@ const app = document.getElementById('app');
 function render() {
   const path = routes[getPath()] ? getPath() : '/';
   app.innerHTML = '';
-  routes[path](app, getQuery());
+  // Pages may mount asynchronously (the builder loads saved drafts first); add the theme
+  // toggle to their top bar once they have.
+  Promise.resolve(routes[path](app, getQuery())).then(() => addThemeToggle(app));
   trackPageView(path, PAGE_TITLES[path]);
 }
 
