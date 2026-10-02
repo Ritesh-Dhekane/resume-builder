@@ -1,0 +1,163 @@
+/* Bold (Awesome-CV style). Page padding top + bottom = 28mm (registry.js pagePaddingMm). */
+.tpl-bold {
+  --accent: #dc3522;
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  padding: 14mm 16mm;
+  background: #ffffff;
+  color: #333333;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.42;
+  box-sizing: border-box;
+}
+
+.tpl-bold header {
+  text-align: center;
+  padding-bottom: 2px;
+}
+
+.tpl-bold h1 {
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.15;
+  letter-spacing: 0.5px;
+  color: #222222;
+}
+
+.tpl-bold h1 .first {
+  font-weight: 300;
+  color: #5a5a5a;
+}
+
+.tpl-bold h1 .last {
+  font-weight: 700;
+}
+
+.tpl-bold .headline {
+  margin: 4px 0 0;
+  color: var(--accent);
+  font-size: 11.5px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.tpl-bold .contact {
+  margin: 6px 0 0;
+  color: #6e6e6e;
+  font-size: 11px;
+}
+
+.tpl-bold .contact .sep {
+  margin: 0 8px;
+  color: var(--accent);
+}
+
+.tpl-bold section {
+  margin-top: 13px;
+}
+
+.tpl-bold h2 {
+  display: flex;
+  align-items: center;
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #222222;
+}
+
+.tpl-bold h2 .lead {
+  color: var(--accent);
+}
+
+.tpl-bold h2 .rule {
+  flex: 1;
+  margin-left: 8px;
+  border-top: 1px solid #b4b4b4;
+}
+
+.tpl-bold .entry {
+  padding-top: 5px;
+}
+
+.tpl-bold .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tpl-bold .row .r {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.tpl-bold .row strong {
+  font-size: 12.5px;
+  color: #222222;
+}
+
+.tpl-bold .place {
+  color: var(--accent);
+  font-style: italic;
+  font-size: 11.5px;
+}
+
+.tpl-bold .org {
+  color: #6e6e6e;
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.tpl-bold .date {
+  color: #6e6e6e;
+  font-style: italic;
+  font-size: 11px;
+}
+
+.tpl-bold .summary {
+  margin: 4px 0 0;
+}
+
+.tpl-bold ul {
+  margin: 3px 0 0;
+  padding-left: 16px;
+}
+
+.tpl-bold li {
+  margin-bottom: 1px;
+}
+
+.tpl-bold li::marker {
+  color: var(--accent);
+}
+
+.tpl-bold .skill {
+  display: grid;
+  grid-template-columns: 34mm 1fr;
+  gap: 10px;
+  padding-top: 3px;
+}
+
+.tpl-bold .skill .cat {
+  font-weight: 700;
+  text-align: right;
+  color: #222222;
+}
+
+.tpl-bold .placeholder-text {
+  opacity: 0.42;
+}
+
+.tpl-bold a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media print {
+  .tpl-bold {
+    min-height: 0;
+    margin: 0;
+  }
+}

@@ -12,6 +12,10 @@
     {
       "id": "two-column",
       "visible": true
+    },
+    {
+      "id": "bold",
+      "visible": true
     }
   ]
 }

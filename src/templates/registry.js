@@ -4,6 +4,8 @@ import { render as renderClassic } from './classic/template.js';
 import classicStyleUrl from './classic/style.css?url';
 import { render as renderTwoColumn } from './two-column/template.js';
 import twoColumnStyleUrl from './two-column/style.css?url';
+import { render as renderBold } from './bold/template.js';
+import boldStyleUrl from './bold/style.css?url';
 import { BOLD_THEME, CLASSIC_THEME, JAKES_THEME, MINIMAL_THEME } from './vectorThemes.js';
 import config from './templates.json';
 
@@ -53,6 +55,17 @@ const DEFINITIONS = {
     pagePaddingMm: 28,
     layout: 'sidebar',
     vectorTheme: null,
+    placeholder: 'general',
+  },
+  bold: {
+    name: 'Bold',
+    description: 'Confident single column with a red accent and a big name. For experienced professionals.',
+    render: renderBold,
+    styleUrl: boldStyleUrl,
+    rootClass: 'tpl-bold',
+    pagePaddingMm: 28,
+    layout: 'single',
+    vectorTheme: BOLD_THEME,
     placeholder: 'general',
   },
 };
