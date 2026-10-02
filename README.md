@@ -19,6 +19,28 @@ Visit `http://localhost:5173` (or the port Vite prints).
 - `npm run preview` — serve the production build locally, to sanity-check it before pushing.
 - `npm run gallery:manifest` — rescans `public/gallery/*.pdf` and regenerates `public/gallery/manifest.json`. Run this after manually adding/removing PDFs; the dev upload endpoint does it automatically.
 
+## Templates
+
+Five templates: **Jake's Resume** (tech), **Classic** (Harvard style), **Two-Column** (sidebar),
+**Bold** and **Minimal**. Your content stays when you switch templates in the builder.
+
+Show, hide or reorder them in `src/templates/templates.json`:
+
+```json
+{ "id": "classic", "visible": false }
+```
+
+Hidden templates disappear from the gallery and the builder's template picker; a link to one opens
+the first visible template instead. Rebuild/redeploy after editing.
+
+Adding a template: create `src/templates/<id>/template.js` (exports `render(resume, placeholder)`)
+and `style.css`, register it in `src/templates/registry.js` (root class, page padding, layout,
+optional Super Premium theme in `vectorThemes.js`), and list it in `templates.json`.
+Single-column templates render a header and then one `<section>` (`<h2>` + entries) per part, so
+pages break between entries; see `src/lib/paginate.js` for the sidebar layout.
+
+Super Premium (text-based PDF) is available for every template except Two-Column.
+
 ## Personal workflow (local only)
 
 - **Save** in the builder POSTs to a dev-only endpoint that appends the resume to `public/data/history.json` with a timestamp — a running history of every version you've saved, tagged with the target role/JD if you filled those in. Only works under `npm run dev`; on the deployed site, Save falls back to a browser-local copy + JSON download.

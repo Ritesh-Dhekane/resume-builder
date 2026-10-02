@@ -6,6 +6,8 @@ import { render as renderTwoColumn } from './two-column/template.js';
 import twoColumnStyleUrl from './two-column/style.css?url';
 import { render as renderBold } from './bold/template.js';
 import boldStyleUrl from './bold/style.css?url';
+import { render as renderMinimal } from './minimal/template.js';
+import minimalStyleUrl from './minimal/style.css?url';
 import { BOLD_THEME, CLASSIC_THEME, JAKES_THEME, MINIMAL_THEME } from './vectorThemes.js';
 import config from './templates.json';
 
@@ -66,6 +68,17 @@ const DEFINITIONS = {
     pagePaddingMm: 28,
     layout: 'single',
     vectorTheme: BOLD_THEME,
+    placeholder: 'general',
+  },
+  minimal: {
+    name: 'Minimal',
+    description: 'Clean and airy with a green accent. For design, content and creative roles.',
+    render: renderMinimal,
+    styleUrl: minimalStyleUrl,
+    rootClass: 'tpl-minimal',
+    pagePaddingMm: 36,
+    layout: 'single',
+    vectorTheme: MINIMAL_THEME,
     placeholder: 'general',
   },
 };
