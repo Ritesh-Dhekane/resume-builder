@@ -97,10 +97,10 @@ export function mount(container) {
     const card = document.createElement('div');
     card.className = 'card template-card';
     card.innerHTML = `
-      <div class="template-thumb">
+      <button type="button" class="template-thumb" aria-label="Preview the ${template.name} template">
         <div class="template-thumb-inner">${template.render(placeholder)}</div>
-      </div>
-      <h3>${template.name}</h3>
+      </button>
+      <h3><button type="button" class="template-name">${template.name}</button></h3>
       <p class="page-subtitle">${template.description}</p>
       <div class="actions" style="margin:0;">
         <button type="button" class="btn preview-template">Preview</button>
@@ -114,6 +114,13 @@ export function mount(container) {
     card.querySelector('.preview-template').addEventListener('click', () => {
       openPreviewModal(template, placeholder);
     });
+    // The thumbnail and the name open the full preview too.
+    for (const el of card.querySelectorAll('.template-thumb, .template-name')) {
+      el.addEventListener('click', () => {
+        trackEvent('template_preview', { template_id: template.id, source: el.classList.contains('template-thumb') ? 'thumbnail' : 'name' });
+        openPreviewModal(template, placeholder);
+      });
+    }
     grid.appendChild(card);
 
     const thumb = card.querySelector('.template-thumb');
