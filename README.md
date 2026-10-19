@@ -1,5 +1,13 @@
 # Resume Builder
 
+[![Live site](https://img.shields.io/badge/live-open%20the%20app-2ea44f?logo=googlechrome&logoColor=white)](https://ritesh-dhekane.github.io/resume-builder/)
+[![Deploy](https://github.com/Ritesh-Dhekane/resume-builder/actions/workflows/deploy.yml/badge.svg)](https://github.com/Ritesh-Dhekane/resume-builder/actions/workflows/deploy.yml)
+[![License](https://img.shields.io/github/license/Ritesh-Dhekane/resume-builder)](LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/Ritesh-Dhekane/resume-builder)](https://github.com/Ritesh-Dhekane/resume-builder/commits)
+![React](https://img.shields.io/badge/React-20232a?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178c6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646cff?logo=vite&logoColor=white)
+
 A client-side resume builder: pick a template, fill in a form, get a live preview, download as an image or PDF. No backend — the deployed site is static.
 
 ## Setup
