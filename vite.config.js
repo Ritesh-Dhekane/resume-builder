@@ -40,6 +40,16 @@ export default defineConfig(({ mode, command }) => {
     // accordingly. Dev server stays at root.
     base: command === 'build' ? '/resume-builder/' : '/',
     plugins: [devHistoryPlugin(), excludePersonalData()],
+    // Two HTML entry points: the app (hash-routed) and the static privacy page,
+    // which needs its own crawlable URL.
+    build: {
+      rollupOptions: {
+        input: {
+          main: path.resolve(import.meta.dirname, 'index.html'),
+          privacy: path.resolve(import.meta.dirname, 'privacy.html'),
+        },
+      },
+    },
     define: {
       __ADMIN_PASSWORD_HASH__: JSON.stringify(adminPasswordHash),
     },
