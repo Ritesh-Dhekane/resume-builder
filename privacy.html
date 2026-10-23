@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy · Resume Builder</title>
+<meta name="description" content="What Resume Builder does with your data: your resume stays in your browser." />
+<script>
+  // Same pre-paint theme as index.html — see src/lib/theme.js.
+  try {
+    document.documentElement.dataset.theme =
+      localStorage.getItem('resume-builder:theme') === 'dark' ? 'dark' : 'light';
+  } catch (e) {
+    document.documentElement.dataset.theme = 'light';
+  }
+</script>
+<link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+<link rel="stylesheet" href="/src/styles/global.css" />
+</head>
+<body>
+<header class="topbar"><a class="brand" href="./">Resume Builder</a></header>
+<main class="container prose" id="app">
+  <h1 class="page-title">Privacy</h1>
+  <p class="page-subtitle">Last updated 2026-10-23</p>
+
+  <h2>Your resume stays in your browser</h2>
+  <p>Resume Builder has no account and no backend. What you type is kept in your browser's
+    <code>localStorage</code> on this site, so your draft is still there when you come back. It is not
+    uploaded anywhere.</p>
+  <p>The <strong>Save</strong> button keeps a copy in your browser and downloads it to you as a JSON file.
+    (It first tries a save endpoint that only exists when the app runs on the developer's own machine; on
+    this site there is no such server, so that attempt simply fails.)</p>
+
+  <h2>Downloads are made on your device</h2>
+  <p>The image and PDF downloads are generated in your browser with
+    <a href="https://html2canvas.hertzen.com/" rel="noopener">html2canvas</a> and
+    <a href="https://github.com/parallax/jsPDF" rel="noopener">jsPDF</a>, which are bundled with the site.
+    Your resume is not sent to a server to be converted.</p>
+
+  <h2>Analytics</h2>
+  <p>The app uses Google Analytics 4, loaded from <code>googletagmanager.com</code>, to count usage:
+    page views (Templates, Builder), which template was picked or previewed, which download format was
+    used, and when a premium PDF option was unlocked. It never sends resume content, file names or promo
+    codes. Google may set its own cookies for this; you can block them with your browser or a
+    content blocker and the app keeps working.</p>
+
+  <h2>Other third-party requests</h2>
+  <p>None. Fonts, scripts and styles are served from this site; there is no CDN. Links you choose to
+    follow (for example the WhatsApp link for asking about a promo code) take you to those services.</p>
+
+  <h2>Payments and promo codes</h2>
+  <p>There are no payments on this site. Some premium PDF options can be unlocked with a promo code; the
+    code is checked in your browser and is not stored or sent anywhere.</p>
+
+  <h2>Deleting your data</h2>
+  <p>Everything is in your browser, so you delete it there: clear this site's data (in most browsers,
+    <em>Settings → Privacy → Site data</em>, or the padlock icon in the address bar → <em>Site settings
+    → Delete data</em>). This removes your draft, saved copies and theme choice. Downloaded files stay
+    wherever you saved them.</p>
+
+  <h2>Contact</h2>
+  <p>Questions? Reach me through my portfolio:
+    <a href="https://ritesh-dhekane.github.io/">ritesh-dhekane.github.io</a>.</p>
+</main>
+<footer class="site-footer">
+  <a href="./privacy.html">Privacy</a>
+  <span aria-hidden="true">·</span>
+  <span>Made with ♥ by <a href="https://ritesh-dhekane.github.io/">Ritesh Dhekane</a></span>
+</footer>
+<script type="module" src="/src/privacy.js"></script>
+</body>
+</html>
