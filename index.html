@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Resume Builder</title>
+<script>
+  // Apply the saved theme (light by default) before the page paints — see src/lib/theme.js.
+  try {
+    document.documentElement.dataset.theme =
+      localStorage.getItem('resume-builder:theme') === 'dark' ? 'dark' : 'light';
+  } catch (e) {
+    document.documentElement.dataset.theme = 'light';
+  }
+</script>
+<link rel="icon" type="image/svg+xml" href="/resume-builder/favicon.svg" />
+  <script type="module" crossorigin src="/resume-builder/assets/main-CRWqO7nA.js"></script>
+  <link rel="modulepreload" crossorigin href="/resume-builder/assets/theme-BvRLjNOe.js">
+  <link rel="stylesheet" crossorigin href="/resume-builder/assets/theme--PkJ6Fnb.css">
+</head>
+<body>
+<main id="app"></main>
+<footer class="site-footer">
+  <a href="./privacy.html">Privacy</a>
+  <span aria-hidden="true">·</span>
+  <span>Made with ♥ by <a href="https://ritesh-dhekane.github.io/">Ritesh Dhekane</a></span>
+</footer>
+</body>
+</html>
